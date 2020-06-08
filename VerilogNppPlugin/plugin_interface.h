@@ -29,8 +29,6 @@ struct FuncItem {
     ShortcutKey* _pShKey;
 };
 
-extern ScintillaEditor editor;
-
 DLL_EXPORT void setInfo(NppData);
 DLL_EXPORT const TCHAR* getName();
 DLL_EXPORT FuncItem* getFuncsArray(int* func_count);

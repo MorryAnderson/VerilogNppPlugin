@@ -28,7 +28,8 @@ INCLUDEPATH += \
 SOURCES += \
     plugin_agent.cpp \
     plugin_cmd.cpp \
-    plugin_interface.cpp
+    plugin_interface.cpp \
+    plugin_notification.cpp
 
 HEADERS += \
     header_cmd/menu_cmd.h \
@@ -38,7 +39,8 @@ HEADERS += \
     header_cmd/scintilla_editor.h \
     plugin_agent.h \
     plugin_cmd.h \
-    plugin_interface.h
+    plugin_interface.h \
+    plugin_notification.h
 
 unix {
     target.path = /usr/lib

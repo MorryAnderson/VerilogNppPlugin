@@ -15,6 +15,9 @@ FuncItem* GetFuncItem();
 /// The data of Notepad++ used in plugin commands
 extern NppData npp_data;
 
+/// The class that represents the Scintilla Editor
+extern ScintillaEditor editor;
+
 /// Initialization of plugin data
 /** @note It will be called while plugin loading */
 void PluginInit(HANDLE);

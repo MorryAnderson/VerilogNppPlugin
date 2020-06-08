@@ -1,8 +1,6 @@
 #include "plugin_cmd.h"
-#include "plugin_interface.h"
+#include "plugin_agent.h"
 #include "menu_cmd.h"
-
-extern NppData npp_data;
 
 //----------------------------------------------//
 //-- STEP 4. DEFINE YOUR ASSOCIATED FUNCTIONS --//

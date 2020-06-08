@@ -15,9 +15,9 @@ NppData npp_data;
 
 static FuncItem func_item[kFunCount];
 
-FuncItem* GetFuncItem(){
-    return func_item;
-}
+FuncItem* GetFuncItem(){return func_item;}
+
+ScintillaEditor editor;
 
 void PluginInit(HANDLE /*h_module*/){
 }
