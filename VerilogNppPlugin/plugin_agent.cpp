@@ -5,7 +5,7 @@
 //--------------------------------//
 //-- STEP 1. DEFINE PLUGIN NAME --//
 //--------------------------------//
-const TCHAR kNppPluginName[] = TEXT("Verilog HDL");
+const TCHAR kNppPluginName[] = _T("Verilog HDL");
 
 //------------------------------------------//
 //-- STEP 2. DEFINE PLUGIN COMMAND NUMBER --//
@@ -28,11 +28,14 @@ void PluginCleanUp(){
 }
 
 void CommandMenuInit(){
+    TCHAR config_dir[MAX_PATH];
+    ::SendMessage(npp_data._nppHandle, NPPM_GETPLUGINSCONFIGDIR, MAX_PATH, reinterpret_cast<LPARAM>(config_dir));
+    verilog.LoadIniFile(config_dir);
     //---------------------------------------//
     //-- STEP 3. CUSTOMIZE PLUGIN COMMANDS --//
     //---------------------------------------//
-    SetCommand(0, TEXT("Enabled"), Enabled, nullptr, false);
-    SetCommand(1, TEXT("---"), nullptr, nullptr, false);
+    SetCommand(0, _T("Enabled"), Enabled, nullptr, false);
+    SetCommand(1, _T("---"), nullptr, nullptr, false);
 }
 
 void CommandMenuCleanUp(){
@@ -53,6 +56,6 @@ bool SetCommand(size_t index, const TCHAR *cmd_name, PFUNCPLUGINCMD p_func, Shor
 
 HWND GetCurrentScintilla(){
     int which = 0;
-    SendMessage(npp_data._nppHandle, NPPM_GETCURRENTSCINTILLA, SCI_UNUSED, reinterpret_cast<LPARAM>(&which));
+    ::SendMessage(npp_data._nppHandle, NPPM_GETCURRENTSCINTILLA, SCI_UNUSED, reinterpret_cast<LPARAM>(&which));
     return (which == 0) ? npp_data._scintillaMainHandle : npp_data._scintillaSecondHandle;
 }

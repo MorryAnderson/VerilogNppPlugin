@@ -25,7 +25,7 @@ void GetLangName(){
     lang_name = new wchar_t[static_cast<unsigned int>(lang_name_len+1)];
     ::SendMessage(npp_data._nppHandle, NPPM_GETLANGUAGENAME, static_cast<WPARAM>(lang_type), reinterpret_cast<LPARAM>(lang_name));
 
-    if (wcscmp(lang_name, TEXT("udf - VerilogHDL")) == 0 || wcscmp(lang_name, TEXT("Verilog")) == 0) {
+    if (wcscmp(lang_name, _T("udf - VerilogHDL")) == 0 || wcscmp(lang_name, _T("Verilog")) == 0) {
         SetEnabled(true);
     } else {
         SetEnabled(false);

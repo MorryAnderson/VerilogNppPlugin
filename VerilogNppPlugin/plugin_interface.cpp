@@ -38,19 +38,39 @@ FuncItem * getFuncsArray(int *func_count){
 }
 
 void beNotified(SCNotification* scn){
+    // track language type
+    switch (scn->nmhdr.code) {
+        //*
+        case NPPN_BUFFERACTIVATED:
+            editor.SetScintillaInstance(GetCurrentScintilla());
+            Notify::NppBufferActivated(scn->nmhdr.idFrom);
+            break;
+        //*/
+
+        //*
+        case NPPN_LANGCHANGED:
+            Notify::NppLangChanged(scn->nmhdr.idFrom);
+            break;
+        //*/
+
+        //*
+        case NPPN_SHUTDOWN:
+            CommandMenuCleanUp();
+            Notify::NppShutdown();
+            break;
+        //*/
+        default: break;
+    }
+
+    // the following notifications are ative only if the pluign is enabled
+    if (!verilog.get_enabled()) return;
+
     switch (scn->nmhdr.code) {
         // Notepad++ Notifications
 
         /*
         case NPPN_BEFORESHUTDOWN:
             Notify::NppBeforeShutdown();
-            break;
-        //*/
-
-        //*
-        case NPPN_BUFFERACTIVATED:
-            editor.SetScintillaInstance(GetCurrentScintilla());
-            Notify::NppBufferActivated(scn->nmhdr.idFrom);
             break;
         //*/
 
@@ -150,12 +170,6 @@ void beNotified(SCNotification* scn){
             break;
         //*/
 
-        //*
-        case NPPN_LANGCHANGED:
-            Notify::NppLangChanged(scn->nmhdr.idFrom);
-            break;
-        //*/
-
         /*
         case NPPN_READONLYCHANGED:
             Notify::NppReadonlyChanged(scn->nmhdr.hwndFrom, scn->nmhdr.idFrom);
@@ -171,13 +185,6 @@ void beNotified(SCNotification* scn){
         /*
         case NPPN_SHORTCUTREMAPPED:
             Notify::NppShortcutRemapped(scn->nmhdr.hwndFrom, scn->nmhdr.idFrom);
-            break;
-        //*/
-
-        //*
-        case NPPN_SHUTDOWN:
-            CommandMenuCleanUp();
-            Notify::NppShutdown();
             break;
         //*/
 
@@ -212,7 +219,7 @@ void beNotified(SCNotification* scn){
             break;
         //*/
 
-        /*
+        //*
         case SCN_AUTOCCOMPLETED:
             Notify::AutoCompleteCompleted(scn->position, scn->text);
             break;
@@ -236,7 +243,7 @@ void beNotified(SCNotification* scn){
             break;
         //*/
 
-        /*
+        //*
         case SCN_CHARADDED:
             Notify::CharAdded(scn->ch);
             break;

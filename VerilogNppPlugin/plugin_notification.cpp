@@ -94,7 +94,16 @@ void Notify::AutoCompleteCancelled(){
 void Notify::AutoCompleteCharDeleted(){
 }
 
-void Notify::AutoCompleteCompleted(int /*position*/, const char* /*text*/){
+void Notify::AutoCompleteCompleted(int /*position*/, const char* text){
+    if (lstrcmpA(text, "begin") == 0) {
+        editor.NewLine();
+        editor.Tab();
+        editor.NewLine();
+        editor.BackTab();
+        editor.InsertText(-1, "end");
+        editor.LineUp();
+        editor.LineEnd();
+    }
 }
 
 void Notify::AutoCompleteSelection(int /*position*/, const char* /*text*/){
@@ -108,6 +117,15 @@ void Notify::CallTipClick(){
 }
 
 void Notify::CharAdded(int /*ch*/){
+    // Find the word start
+    int current_pos = editor.GetCurrentPos();
+    int word_start_pos = editor.WordStartPosition(current_pos, true);
+
+    // Display the autocompletion list
+    int len_entered = current_pos - word_start_pos;
+    if (len_entered >= verilog.get_autocomplete_len()) {
+        if (!editor.AutoCActive()) editor.AutoCShow(len_entered, verilog.get_keywords());
+    }
 }
 
 void Notify::DoubleClick(int /*position*/, int /*line*/){
