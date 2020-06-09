@@ -29,7 +29,8 @@ SOURCES += \
     plugin_agent.cpp \
     plugin_cmd.cpp \
     plugin_interface.cpp \
-    plugin_notification.cpp
+    plugin_notification.cpp \
+    verilog_cmd.cpp
 
 HEADERS += \
     header_cmd/menu_cmd.h \
@@ -40,7 +41,8 @@ HEADERS += \
     plugin_agent.h \
     plugin_cmd.h \
     plugin_interface.h \
-    plugin_notification.h
+    plugin_notification.h \
+    verilog_cmd.h
 
 unix {
     target.path = /usr/lib

@@ -150,7 +150,7 @@ void beNotified(SCNotification* scn){
             break;
         //*/
 
-        /*
+        //*
         case NPPN_LANGCHANGED:
             Notify::NppLangChanged(scn->nmhdr.idFrom);
             break;

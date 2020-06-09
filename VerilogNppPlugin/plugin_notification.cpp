@@ -1,4 +1,8 @@
 #include "plugin_notification.h"
+#include "plugin_agent.h"
+#include "plugin_cmd.h"
+
+// remember to uncomment corresponding funciton in "plugin_interface.cpp" - "void beNotified(SCNotification* scn)"
 
 //===== Notepad++ Notification =====
 
@@ -6,6 +10,7 @@ void Notify::NppBeforeShutdown(){
 }
 
 void Notify::NppBufferActivated(uptr_t /* buffer_id */){
+    GetLangName();
 }
 
 void Notify::NppCancelShutdown(){
@@ -57,6 +62,7 @@ void Notify::NppFileSaved(uptr_t /* buffer_id */){
 }
 
 void Notify::NppLangChanged(uptr_t /* buffer_id */){
+   GetLangName();
 }
 
 void Notify::NppReadonlyChanged(void* /* buffer_id */, uptr_t /* doc_status */){

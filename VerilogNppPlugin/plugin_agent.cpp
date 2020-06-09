@@ -1,5 +1,6 @@
 #include "plugin_agent.h"
 #include "plugin_cmd.h"
+#include "verilog_cmd.h"
 
 //--------------------------------//
 //-- STEP 1. DEFINE PLUGIN NAME --//
@@ -18,6 +19,7 @@ static FuncItem func_item[kFunCount];
 FuncItem* GetFuncItem(){return func_item;}
 
 ScintillaEditor editor;
+VerilogCmd verilog;
 
 void PluginInit(HANDLE /*h_module*/){
 }
@@ -29,8 +31,8 @@ void CommandMenuInit(){
     //---------------------------------------//
     //-- STEP 3. CUSTOMIZE PLUGIN COMMANDS --//
     //---------------------------------------//
-    SetCommand(0, TEXT("Hello Notepad++"), Hello, nullptr, false);
-    SetCommand(1, TEXT("Hello (with dialog)"), HelloDlg, nullptr, false);
+    SetCommand(0, TEXT("Enabled"), Enabled, nullptr, false);
+    SetCommand(1, TEXT("---"), nullptr, nullptr, false);
 }
 
 void CommandMenuCleanUp(){

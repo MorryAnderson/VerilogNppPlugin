@@ -1,7 +1,12 @@
-#ifndef VERILOG_CMD_H
-#define VERILOG_CMD_H
+#ifndef PLUGIN_CMD_H
+#define PLUGIN_CMD_H
 
-void Hello();
+void Enabled();
 void HelloDlg();
 
-#endif // VERILOG_CMD_H
+// private functions:
+
+void SetEnabled(bool);
+void GetLangName();
+
+#endif // PLUGIN_CMD_H

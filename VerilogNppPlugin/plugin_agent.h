@@ -2,6 +2,7 @@
 #define PLUGINDEFINITION_H
 
 #include "plugin_interface.h"
+#include "verilog_cmd.h"
 
 /// plugin name
 extern const TCHAR kNppPluginName[];
@@ -17,6 +18,8 @@ extern NppData npp_data;
 
 /// The class that represents the Scintilla Editor
 extern ScintillaEditor editor;
+
+extern VerilogCmd verilog;
 
 /// Initialization of plugin data
 /** @note It will be called while plugin loading */
