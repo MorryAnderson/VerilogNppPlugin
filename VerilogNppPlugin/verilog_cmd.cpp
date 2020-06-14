@@ -1,5 +1,6 @@
 #include "verilog_cmd.h"
 #include <Windows.h>
+#include <QTextStream>
 
 VerilogCmd::VerilogCmd() : enabled_(false), autocomplete_len_(2){
 
@@ -9,7 +10,7 @@ VerilogCmd::VerilogCmd(const TCHAR* dir) : VerilogCmd(){
     LoadIniFile(dir);
 }
 
-void VerilogCmd::LoadIniFile(const TCHAR *dir){
+void VerilogCmd::LoadIniFile(const TCHAR* dir){
     TCHAR inifilepath[MAX_PATH];
     TCHAR keywords_w[KEYWORD_STR_SIZE*2];
 
