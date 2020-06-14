@@ -26,6 +26,7 @@ INCLUDEPATH += \
     header_cmd
 
 SOURCES += \
+    module_parser.cpp \
     plugin_agent.cpp \
     plugin_cmd.cpp \
     plugin_interface.cpp \
@@ -38,6 +39,7 @@ HEADERS += \
     header_cmd/sci_position.h \
     header_cmd/scintilla.h \
     header_cmd/scintilla_editor.h \
+    module_parser.h \
     plugin_agent.h \
     plugin_cmd.h \
     plugin_interface.h \

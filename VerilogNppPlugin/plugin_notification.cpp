@@ -2,7 +2,7 @@
 #include "plugin_agent.h"
 #include "plugin_cmd.h"
 
-// remember to uncomment corresponding funciton in "plugin_interface.cpp" - "void beNotified(SCNotification* scn)"
+// remember to uncomment the corresponding funciton in "plugin_interface.cpp" - "void beNotified(SCNotification* scn)"
 
 //===== Notepad++ Notification =====
 
@@ -10,7 +10,7 @@ void Notify::NppBeforeShutdown(){
 }
 
 void Notify::NppBufferActivated(uptr_t /* buffer_id */){
-    GetLangName();
+    TrackLangName();
 }
 
 void Notify::NppCancelShutdown(){
@@ -62,7 +62,7 @@ void Notify::NppFileSaved(uptr_t /* buffer_id */){
 }
 
 void Notify::NppLangChanged(uptr_t /* buffer_id */){
-   GetLangName();
+   TrackLangName();
 }
 
 void Notify::NppReadonlyChanged(void* /* buffer_id */, uptr_t /* doc_status */){
@@ -97,12 +97,14 @@ void Notify::AutoCompleteCharDeleted(){
 void Notify::AutoCompleteCompleted(int /*position*/, const char* text){
     if (lstrcmpA(text, "begin") == 0) {
         editor.NewLine();
-        editor.Tab();
         editor.NewLine();
-        editor.BackTab();
         editor.InsertText(-1, "end");
         editor.LineUp();
-        editor.LineEnd();
+        editor.Tab();
+    } else if (lstrcmpA(text, "module") == 0) {
+        editor.InsertText(-1, " (\n\n);\n\nendmodule\n");
+        editor.LineDown();
+        editor.Tab();
     }
 }
 

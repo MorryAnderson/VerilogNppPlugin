@@ -2,11 +2,12 @@
 #define PLUGIN_CMD_H
 
 void Enabled();
-void HelloDlg();
+void Module();
 
 // private functions:
 
 void SetEnabled(bool);
-void GetLangName();
+void TrackLangName();
+int RetrieveModuleBlock(char **, int* start = nullptr, int* end = nullptr);
 
 #endif // PLUGIN_CMD_H
