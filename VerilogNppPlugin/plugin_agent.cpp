@@ -36,7 +36,7 @@ void CommandMenuInit(){
     //---------------------------------------//
     SetCommand(0, _T("Enabled"), Enabled);
     SetCommand(1, _T("---"), nullptr);
-    SetCommand(2, _T("Module"), Module);
+    SetCommand(2, _T("Replace Module Declaration"), ReplaceModuleDeclaration);
 }
 
 void CommandMenuCleanUp(){

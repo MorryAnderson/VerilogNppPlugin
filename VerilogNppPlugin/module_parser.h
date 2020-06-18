@@ -44,10 +44,13 @@ class ModuleParser {
     };
     ModuleParser();
     ModuleParser(const char*);
+    /// \return return true if no grammar error, otherwise false,
+    ///         use GetLastError() to get error info.
     /// \note Each token's length (including line comment) cannot exceed MAX_TOKEN_LEN
-    /// \warning Block comment not supported!
+    /// \warning Block comments not supported!
     bool ParseModule(const char*);
-    GrammarError GetLastError();
+    int GetLastError(GrammarError* error = nullptr)const;
+    int GetFormattedCode(const char**);
 
   private:
     enum ParserState {
@@ -77,6 +80,8 @@ class ModuleParser {
     };
 
     static const int MAX_TOKEN_LEN = 256;
+
+    static constexpr char TAB[] = "    ";  // 4 spaces (1 tab)
 
     static constexpr char
         KEYWORD_MODULE[] = "module"     ,
@@ -118,12 +123,26 @@ class ModuleParser {
     bool IsOpt(char);
     inline bool IsSpace(char);
     bool ModuleLexer(const QString&, bool is_opt, bool head_of_line);
+    template <typename P> void InsertHeadComments(const P& p);
+    template <typename P> void InsertRange(const P& p);
+    template <typename P> void InsertTailComments(const P& p);
+    void RemoveLastComma();
 
     LexerState lexer_state_;
     Module module_structure_;
     Variable var_;
     Port port_;
     Parameter param_;
+
+    QString formatted_code_;
+    QByteArray formatted_uft8_code_;
+
+    int last_error_pos_;
+
+    int max_dir_len_, max_type_len_;
+    int max_sign_len_, max_range_left_len_, max_range_right_len_;
+    int max_name_len_, max_value_len_;
+    int last_comma_pos_;
 };
 
 }
