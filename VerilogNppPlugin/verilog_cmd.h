@@ -17,6 +17,8 @@ class VerilogCmd {
     bool ParseModule(const char*);
     int GetLastError(Verilog::ModuleParser::GrammarError* error = nullptr)const;
     int GetFormattedCode(const char ** buffer = nullptr);
+    int GetInstantiationTemplate(const char ** buffer = nullptr);
+    int GetTestbenchTemplate(const char ** buffer = nullptr);
     const TCHAR* GetErrorMessage(Verilog::ModuleParser::GrammarError error, int line, int column);
     inline const TCHAR* GetMessageNoModule()const{return ERROR_NO_MODULE;}
 

@@ -1,16 +1,24 @@
 #include "module_parser.h"
 using namespace Verilog;
 
-ModuleParser::ModuleParser() :
-        lexer_state_(LEXER_MODULE),
-        last_error_pos_(-1),
-        max_dir_len_(0), max_type_len_(0),
-        max_sign_len_(0), max_range_left_len_(0), max_range_right_len_(0),
-        max_name_len_(0), max_value_len_(0),
-        last_comma_pos_(0)
-{
+ModuleParser::ModuleParser() : lexer_state_(LEXER_MODULE), last_error_pos_(0), last_comma_pos_(0){
+    max_port_dir_len_ = max_port_type_len_ = 0;
+    max_port_sign_len_ = max_port_name_len_ = 0;
+    max_port_range_left_len_ = max_port_range_right_len_ = 0;
+
+    max_param_value_len_ = max_param_type_len_ = 0;
+    max_param_sign_len_ = max_param_name_len_ = 0;
+    max_param_range_left_len_ = max_param_range_right_len_ = 0;
+
+    last_comma_pos_ = 0;
+
     module_structure_.ports.reserve(32);
-    formatted_code_.reserve(2048);
+    formatted_code_.reserve(1024);
+    formatted_uft8_code_.reserve(1024);
+    instantiation_template_.reserve(512);
+    instantiation_template_utf8_.reserve(512);
+    testbench_template_.reserve(2048);
+    testbench_template_utf8_.reserve(2048);
     port_.dir = KEYWORD_INPUT;
 }
 
@@ -102,6 +110,7 @@ bool ModuleParser::ParseModule(const char * code){
         }
     }
     Q_ASSERT(lexer_state_ == LEXER_END);
+    SetMaxLen();
     last_error_pos_ = -1;
     return lexer_state_ == LEXER_END;
 }
@@ -126,14 +135,11 @@ int ModuleParser::GetLastError(GrammarError* error)const{
     return last_error_pos_;
 }
 
-int ModuleParser::GetFormattedCode(const char **buffer){
+int ModuleParser::GetFormattedCode(const char **pointer){
     formatted_code_.clear();
     if(Q_UNLIKELY(GetLastError() != -1)) return 0;
     Parameter param;
     Port port;
-    max_dir_len_ = max_type_len_ = max_sign_len_ = 0;
-    max_range_left_len_ = max_range_right_len_ = max_name_len_ = 0;
-    max_value_len_ = 0;
     last_comma_pos_ = 0;
     //
     formatted_code_.append(KEYWORD_MODULE);
@@ -142,16 +148,8 @@ int ModuleParser::GetFormattedCode(const char **buffer){
     formatted_code_.append(" ");
 
     if (!module_structure_.params.isEmpty()) {
-        foreach (param, module_structure_.params) {
-            max_sign_len_        = qMax(max_sign_len_,        param.var.sign.length());
-            max_range_left_len_  = qMax(max_range_left_len_,  param.var.range_left.length());
-            max_range_right_len_ = qMax(max_range_right_len_, param.var.range_right.length());
-            max_name_len_        = qMax(max_name_len_,        param.var.name.length());
-            max_value_len_       = qMax(max_value_len_,       param.value.length());
-        }
         formatted_code_.append("#( ");
         formatted_code_.append(KEYWORD_PARAM);
-
         //! [align params]
         foreach (param, module_structure_.params) {
             formatted_code_.append("\n");
@@ -159,14 +157,14 @@ int ModuleParser::GetFormattedCode(const char **buffer){
             InsertHeadComments(param);
             // sign
             formatted_code_.append(TAB);
-            if (max_sign_len_ > 0) formatted_code_.append(param.var.sign.leftJustified(max_sign_len_+1));  // +1 for tail space
+            if (max_port_sign_len_ > 0) formatted_code_.append(param.var.sign.leftJustified(max_port_sign_len_+1));  // +1 for tail space
             // range
-            InsertRange(param);
+            InsertRange(param, formatted_code_);
             // name
-            formatted_code_.append(param.var.name.leftJustified(max_name_len_+1));
+            formatted_code_.append(param.var.name.leftJustified(max_param_name_len_+1));
             // value
             if (!param.value.isEmpty()) {
-                formatted_code_.append(QString("= %1").arg(param.value.leftJustified(max_value_len_+1)));
+                formatted_code_.append(QString("= %1").arg(param.value.leftJustified(max_param_value_len_+1)));
             }
             formatted_code_.append(",");
             // tail comment
@@ -180,15 +178,6 @@ int ModuleParser::GetFormattedCode(const char **buffer){
     formatted_code_.append("(");
 
     if (!module_structure_.ports.isEmpty()) {
-        max_sign_len_ = max_range_left_len_ = max_range_right_len_ = max_name_len_ = 0;
-        foreach (port, module_structure_.ports) {
-            max_sign_len_        = qMax(max_sign_len_,        port.var.sign.length());
-            max_range_left_len_  = qMax(max_range_left_len_,  port.var.range_left.length());
-            max_range_right_len_ = qMax(max_range_right_len_, port.var.range_right.length());
-            max_name_len_        = qMax(max_name_len_,        port.var.name.length());
-            max_dir_len_         = qMax(max_dir_len_,         port.dir.length());
-            max_type_len_        = qMax(max_type_len_,        port.var.type.length());
-        }
         //! [align ports]
         foreach (port, module_structure_.ports) {
             formatted_code_.append("\n");
@@ -196,13 +185,13 @@ int ModuleParser::GetFormattedCode(const char **buffer){
             InsertHeadComments(port);
             // dir & type & sign
             formatted_code_.append(TAB);
-            if (max_dir_len_ > 0) formatted_code_.append(port.dir.leftJustified(max_dir_len_+1));
-            if (max_type_len_ > 0) formatted_code_.append(port.var.type.leftJustified(max_type_len_+1));
-            if (max_sign_len_ > 0) formatted_code_.append(port.var.sign.leftJustified(max_sign_len_+1));
+            if (max_port_dir_len_ > 0) formatted_code_.append(port.dir.leftJustified(max_port_dir_len_+1));
+            if (max_port_type_len_ > 0) formatted_code_.append(port.var.type.leftJustified(max_port_type_len_+1));
+            if (max_port_sign_len_ > 0) formatted_code_.append(port.var.sign.leftJustified(max_port_sign_len_+1));
             // range
-            InsertRange(port);
+            InsertRange(port, formatted_code_);
             // name
-            formatted_code_.append(port.var.name.leftJustified(max_name_len_+1));
+            formatted_code_.append(port.var.name.leftJustified(max_port_name_len_+1));
             formatted_code_.append(",");
             // tail comment
             InsertTailComments(port);
@@ -212,8 +201,124 @@ int ModuleParser::GetFormattedCode(const char **buffer){
     }
     formatted_code_.append(");");
     formatted_uft8_code_ = formatted_code_.toUtf8();
-    if (buffer) *buffer = formatted_uft8_code_.data();
+    if (pointer) *pointer = formatted_uft8_code_.data();
     return formatted_uft8_code_.length();
+}
+
+int ModuleParser::GetInstantiationTemplate(const char **pointer){
+    instantiation_template_.clear();
+    if(Q_UNLIKELY(GetLastError() != -1)) return 0;
+    Parameter param;
+    Port port;
+
+    instantiation_template_.append(module_structure_.name);
+    // params
+    if (!module_structure_.params.isEmpty()) {
+        instantiation_template_.append(" #(");
+        foreach (param, module_structure_.params) {
+            instantiation_template_.append(QString("\n%1.%2 ( %3 ),").arg(TAB)
+                                           .arg(param.var.name.leftJustified(max_param_name_len_))
+                                           .arg(param.value.leftJustified(max_param_value_len_))
+            );
+        }
+        instantiation_template_.chop(1);
+        instantiation_template_.append("\n)");
+    }
+    instantiation_template_.append(" INST_");
+    instantiation_template_.append(module_structure_.name);
+    // ports
+    instantiation_template_.append(" (");
+    if (!module_structure_.ports.isEmpty()) {
+        foreach (port, module_structure_.ports) {
+            instantiation_template_.append(QString("\n%1.%2 ( %2 ),").arg(TAB)
+                                           .arg(port.var.name.leftJustified(max_port_name_len_))
+            );
+        }
+        instantiation_template_.chop(1);
+        instantiation_template_.append("\n");
+    }
+    instantiation_template_.append(");");
+    //
+    instantiation_template_utf8_ = instantiation_template_.toUtf8();
+    if (pointer) *pointer = instantiation_template_utf8_.data();
+    return instantiation_template_utf8_.length();
+}
+
+int ModuleParser::GetTestbenchTemplate(const char **pointer){
+    testbench_template_.clear();
+    if(Q_UNLIKELY(GetLastError() != -1)) return 0;
+
+    QString clock_CLK, reset_RST_N;
+
+    //! [testbench module]
+    testbench_template_.append("`timescale 1ns/1ns\n\nmodule TB_");
+    testbench_template_.append(module_structure_.name);
+    testbench_template_.append("();\n");
+    //! [testbench module]
+
+    //! [params]
+    if (!module_structure_.params.empty()) {
+        Parameter param;
+        foreach (param, module_structure_.params) {
+            testbench_template_.append(QString("\nlocalparam %1 = %2 ;")
+                                       .arg(param.var.name.leftJustified(max_param_name_len_))
+                                       .arg(param.value.leftJustified(max_param_value_len_))
+            );
+        }
+        testbench_template_.append("\n");
+    }
+    //! [params]
+
+    //! [variables]
+    if (!module_structure_.ports.isEmpty()) {
+        int max_type_len = 4;  // wire reg
+        Port port;
+        foreach (port, module_structure_.ports) {
+            testbench_template_.append("\n");
+            if (port.var.name.endsWith("_CLK")) clock_CLK = port.var.name;
+            else if (port.var.name.endsWith("_RST_N")) reset_RST_N = port.var.name;
+            // type
+            if (port.dir == KEYWORD_INPUT) {
+                testbench_template_.append(QString(KEYWORD_REG).leftJustified(max_type_len+1));
+            } else {
+                testbench_template_.append(QString(KEYWORD_WIRE).leftJustified(max_type_len+1));
+            }
+
+            // sign
+            if (max_port_sign_len_ > 0) testbench_template_.append(port.var.sign.leftJustified(max_port_sign_len_+1));
+            // range
+            InsertRange(port, testbench_template_);
+            // name
+            testbench_template_.append(port.var.name.leftJustified(max_port_name_len_+1));
+            if (port.dir == KEYWORD_INPUT) testbench_template_.append("= 0");
+            testbench_template_.append(";");
+        }
+        testbench_template_.append("\n");
+    }
+    //! [variables]
+
+    //! [instantiation]
+    GetInstantiationTemplate(nullptr);
+    testbench_template_.append("\n");
+    testbench_template_.append(instantiation_template_);
+    testbench_template_.append("\n");
+    //! [instantiation]
+
+    //! [initial]
+    testbench_template_.append("\n");
+    if (!clock_CLK.isEmpty()) {
+        testbench_template_.append(QString("initial forever #10/2 %1 = ~%1;\n\n").arg(clock_CLK));
+    }
+    if (!reset_RST_N.isEmpty()) {
+        testbench_template_.append(QString("initial #10 %1 = 1'b1;\n\n").arg(reset_RST_N));
+    }
+    //! [initial]
+
+    testbench_template_.append("endmodule\n");
+
+    testbench_template_utf8_ = testbench_template_.toUtf8();
+    if (pointer) *pointer = testbench_template_utf8_.data();
+    return testbench_template_utf8_.length();
 }
 
 bool ModuleParser::IsOpt(char c){
@@ -416,6 +521,36 @@ bool ModuleParser::ModuleLexer(const QString& token, bool is_opt, bool head_of_l
     return true;
 }
 
+void ModuleParser::SetMaxLen(){
+    max_port_dir_len_ = max_port_type_len_;
+    max_port_sign_len_ = max_port_name_len_ = 0;
+    max_port_range_left_len_ = max_port_range_right_len_ = 0;
+
+    max_param_value_len_ = max_param_type_len_ = 0;
+    max_param_sign_len_ = max_param_name_len_ = 0;
+    max_param_range_left_len_ = max_param_range_right_len_ = 0;
+
+    Parameter param;
+    Port port;
+
+    foreach (param, module_structure_.params) {
+        max_param_sign_len_        = qMax(max_param_sign_len_,        param.var.sign.length());
+        max_param_range_left_len_  = qMax(max_param_range_left_len_,  param.var.range_left.length());
+        max_param_range_right_len_ = qMax(max_param_range_right_len_, param.var.range_right.length());
+        max_param_name_len_        = qMax(max_param_name_len_,        param.var.name.length());
+        max_param_value_len_       = qMax(max_param_value_len_,       param.value.length());
+    }
+
+    foreach (port, module_structure_.ports) {
+        max_port_sign_len_        = qMax(max_port_sign_len_,        port.var.sign.length());
+        max_port_range_left_len_  = qMax(max_port_range_left_len_,  port.var.range_left.length());
+        max_port_range_right_len_ = qMax(max_port_range_right_len_, port.var.range_right.length());
+        max_port_name_len_        = qMax(max_port_name_len_,        port.var.name.length());
+        max_port_dir_len_         = qMax(max_port_dir_len_,         port.dir.length());
+        max_port_type_len_        = qMax(max_port_type_len_,        port.var.type.length());
+    }
+}
+
 template<typename P>
 void ModuleParser::InsertHeadComments(const P& p){
     QString comment;
@@ -427,15 +562,15 @@ void ModuleParser::InsertHeadComments(const P& p){
 }
 
 template<typename P>
-void ModuleParser::InsertRange(const P& p){
-    if (max_range_left_len_ + max_range_right_len_ > 0) {
+void ModuleParser::InsertRange(const P& p, QString& code){
+    if (max_port_range_left_len_ + max_port_range_right_len_ > 0) {
         if (p.var.range_left.length() + p.var.range_right.length() > 0 ) {
-            formatted_code_.append(QString("[%1:%2] ")
-                                   .arg(p.var.range_left, max_range_left_len_)
-                                   .arg(p.var.range_right, max_range_right_len_)
+            code.append(QString("[%1:%2] ")
+                                   .arg(p.var.range_left, max_port_range_left_len_)
+                                   .arg(p.var.range_right, max_port_range_right_len_)
             );
         } else {
-            formatted_code_.append(QString(max_range_left_len_ + max_range_right_len_ + 3 + 1, ' '));  // +3 for [:], +1 for tail space
+            code.append(QString(max_port_range_left_len_ + max_port_range_right_len_ + 3 + 1, ' '));  // +3 for [:], +1 for tail space
         }
     }
 }

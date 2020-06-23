@@ -44,13 +44,30 @@ class ModuleParser {
     };
     ModuleParser();
     ModuleParser(const char*);
-    /// \return return true if no grammar error, otherwise false,
+
+    /// \return return true if no grammar error, otherwise false.
     ///         use GetLastError() to get error info.
     /// \note Each token's length (including line comment) cannot exceed MAX_TOKEN_LEN
     /// \warning Block comments not supported!
     bool ParseModule(const char*);
+
+    /// \return The postion(offset) where the last error occured.
+    /// \retval -1 No error occured
+    /// \param error Type of last error.
     int GetLastError(GrammarError* error = nullptr)const;
-    int GetFormattedCode(const char**);
+
+    // the following functions use the result of ParseModule().
+    // Make sure ParseModule() is successfullyy executed before calling those function.
+
+    /// \details this function reassign the param "pointer" to an internal string buffer.
+    /// \return length of code
+    /// \param pointer a pointer of char* type
+    int GetFormattedCode(const char** pointer);
+
+    int GetInstantiationTemplate(const char** pointer);
+
+    /// \note this function call GetInstantiationTemplate() internally.
+    int GetTestbenchTemplate(const char** pointer);
 
   private:
     enum ParserState {
@@ -123,8 +140,9 @@ class ModuleParser {
     bool IsOpt(char);
     inline bool IsSpace(char);
     bool ModuleLexer(const QString&, bool is_opt, bool head_of_line);
+    void SetMaxLen();
     template <typename P> void InsertHeadComments(const P& p);
-    template <typename P> void InsertRange(const P& p);
+    template <typename P> void InsertRange(const P&, QString&);
     template <typename P> void InsertTailComments(const P& p);
     void RemoveLastComma();
 
@@ -139,10 +157,21 @@ class ModuleParser {
 
     int last_error_pos_;
 
-    int max_dir_len_, max_type_len_;
-    int max_sign_len_, max_range_left_len_, max_range_right_len_;
-    int max_name_len_, max_value_len_;
+    int max_port_dir_len_, max_port_type_len_;
+    int max_port_sign_len_, max_port_name_len_;
+    int max_port_range_left_len_, max_port_range_right_len_;
+
+    int max_param_value_len_, max_param_type_len_;
+    int max_param_sign_len_, max_param_name_len_;
+    int max_param_range_left_len_, max_param_range_right_len_;
+
     int last_comma_pos_;
+
+    QString instantiation_template_;
+    QByteArray instantiation_template_utf8_;
+
+    QString testbench_template_;
+    QByteArray testbench_template_utf8_;
 };
 
 }

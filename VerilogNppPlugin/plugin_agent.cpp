@@ -10,7 +10,7 @@ const TCHAR kNppPluginName[] = _T("Verilog HDL");
 //------------------------------------------//
 //-- STEP 2. DEFINE PLUGIN COMMAND NUMBER --//
 //------------------------------------------//
-const int kFunCount = 3;
+const int kFunCount = 6;
 
 NppData npp_data;
 
@@ -36,7 +36,10 @@ void CommandMenuInit(){
     //---------------------------------------//
     SetCommand(0, _T("Enabled"), Enabled);
     SetCommand(1, _T("---"), nullptr);
-    SetCommand(2, _T("Replace Module Declaration"), ReplaceModuleDeclaration);
+    SetCommand(2, _T("Replace Declaration"), ReplaceModuleDeclaration);
+    SetCommand(3, _T("Copy Instantiation"), CopyInstantiationTemplate);
+    SetCommand(4, _T("Create Testbench"), CreateTestbench);
+    SetCommand(5, _T("---"), nullptr);
 }
 
 void CommandMenuCleanUp(){
