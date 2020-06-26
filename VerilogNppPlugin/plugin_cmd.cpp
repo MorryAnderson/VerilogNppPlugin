@@ -19,9 +19,9 @@ void ReplaceModuleDeclaration(){
 
     if (RetrieveAndParseModule(&start, &end) == false) return;
 
-    int code_len = verilog.GetFormattedCode(&formatted_code);
+    verilog.GetFormattedCode(&formatted_code);
     editor.SetTargetRange(start, end);
-    editor.ReplaceTarget(code_len, formatted_code);
+    editor.ReplaceTarget(-1, formatted_code);
     ::MessageBoxW(nullptr, _T("module code block replaced"), kNppPluginName, MB_OK);
 }
 
@@ -117,4 +117,54 @@ void CreateTestbench(){
     verilog.GetTestbenchTemplate(&testbench_code);
     ::SendMessage(npp_data._nppHandle, NPPM_MENUCOMMAND, 0, IDM_FILE_NEW);
     editor.SetText(testbench_code);
+}
+
+void AlignPortList(){
+    int current_line = editor.LineFromPosition(editor.GetCurrentPos());
+    char c = GetFirstCharInLine(current_line);
+    if (c != '.') return;
+    int line_count = editor.GetLineCount();
+    int start_line(current_line), end_line(current_line);
+
+    for (int i = current_line-1; i >= 0; --i) {
+        if (GetFirstCharInLine(i) != '.') {
+            start_line = i + 1;
+            break;
+        }
+    }
+    for (int i = current_line+1; i < line_count; ++i) {
+        if (GetFirstCharInLine(i) != '.') {
+            end_line = i - 1;
+            break;
+        }
+    }
+
+    int start_pos = editor.PositionFromLine(start_line);
+    int end_pos = editor.GetLineEndPosition(end_line);
+    editor.SetTargetStart(start_pos);
+    editor.SetTargetEnd(end_pos);
+
+    char* code(nullptr);
+    code = new char[static_cast<unsigned int>(end_pos - start_pos + 2)];
+    Sci_TextRange range = {{start_pos, end_pos}, code};
+    editor.GetTextRange(&range);
+
+    char* aligned_code(nullptr);
+    verilog.AlignPortList(code, &aligned_code);
+    editor.SetTargetRange(start_pos, end_pos);
+    editor.ReplaceTarget(-1, aligned_code);
+
+    delete aligned_code;
+    delete code;
+}
+
+char GetFirstCharInLine(int line){
+    int start_pos = editor.PositionFromLine(line);
+    int end_pos = editor.GetLineEndPosition(line);
+    char c('\0');
+    for (int i = start_pos; i <= end_pos; ++i) {
+        c = static_cast<char>(editor.GetCharAt(i));
+        if (c != ' ') return c;
+    }
+    return '\0';
 }

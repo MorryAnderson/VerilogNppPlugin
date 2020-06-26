@@ -3,13 +3,18 @@
 #include <../VerilogNppPlugin/module_parser.h>
 using namespace Verilog;
 #include <QDebug>
+#include <QString>
 #include <Windows.h>
+
+//#define DEBUG_PARSER
+#define DEBUG_ALIGN
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
     Verilog::ModuleParser parser;
     VerilogCmd verilog(L"C:\\Users\\Morry\\AppData\\Roaming\\Notepad++\\plugins\\config");
+#ifdef DEBUG_PARSER
     //*
     const char code[] = {
         "module module_name #(WIDTH=8)(\n"
@@ -64,7 +69,21 @@ int main(int argc, char *argv[])
     const char* testbench_code(nullptr);
     parser.GetTestbenchTemplate(&testbench_code);
     qDebug() << testbench_code << '\n';
-
+#endif
+#ifdef DEBUG_ALIGN
+    const char port_list[] = {
+        "    .clk ( clk ),\n"
+        "    .rst_N ( rst_N ), // comment\n"
+        "    .O_mute ( O_mute ), \n"
+        "    .I_bclk ( I_bclk ),  // 中文注释\n"
+        "    .I_data ( I_data ),\n"
+        "    .I_ws ( I_ws ) "
+    };
+    char* aligned_code(nullptr);
+    verilog.AlignPortList(port_list, &aligned_code);
+    qDebug() << aligned_code;
+    delete aligned_code;
+#endif
     return a.exec();
 }
 
