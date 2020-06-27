@@ -1,7 +1,6 @@
 #include "verilog_cmd.h"
 #include <Windows.h>
 
-
 VerilogCmd::VerilogCmd() : enabled_(false), autocomplete_len_(2){
     error_message_[0] = '\0';
     ERROR_NO_MODULE[0] = '\0';
@@ -13,6 +12,17 @@ VerilogCmd::VerilogCmd() : enabled_(false), autocomplete_len_(2){
     ERROR_PORT_END[0] = '\0';
     ERROR_PARAM_BRACKET[0] = '\0';
     ERROR_PARAM_EQUAL[0] = '\0';
+    instantiation_align_.AddDelimeter(".", 4, 0);
+    instantiation_align_.AddDelimeter("(", 1, 1);
+    instantiation_align_.AddDelimeter(")", 1, 0);
+    instantiation_align_.AddDelimeter(",", 0, 0);
+    instantiation_align_.AddDelimeter("//", 2, 0);
+    assignment_align_.AddDelimeter("=", 1, 1);
+    assignment_align_.AddDelimeter(";", 0, 0);
+    assignment_align_.AddDelimeter("//", 2, 0);
+    unblocking_assign_align_.AddDelimeter("<=", 1, 1);
+    unblocking_assign_align_.AddDelimeter(";", 0, 0);
+    unblocking_assign_align_.AddDelimeter("//", 2, 0);
 }
 
 VerilogCmd::VerilogCmd(const TCHAR* dir) : VerilogCmd(){
@@ -69,19 +79,19 @@ const TCHAR *VerilogCmd::GetErrorMessage(Verilog::ModuleParser::GrammarError err
 
     switch (error) {
         case Verilog::ModuleParser::ERROR_NONE:
-        error_info = ERROR_NONE; break;
+            error_info = ERROR_NONE; break;
         case Verilog::ModuleParser::ERROR_MODULE_NAME:
-        error_info = ERROR_MODULE_NAME; break;
+            error_info = ERROR_MODULE_NAME; break;
         case Verilog::ModuleParser::ERROR_PORT:
-        error_info = ERROR_PORT; break;
+            error_info = ERROR_PORT; break;
         case Verilog::ModuleParser::ERROR_VAR_NAME:
-        error_info = ERROR_VAR_NAME; break;
+            error_info = ERROR_VAR_NAME; break;
         case Verilog::ModuleParser::ERROR_PORT_END:
-        error_info = ERROR_PORT_END; break;
+            error_info = ERROR_PORT_END; break;
         case Verilog::ModuleParser::ERROR_PARAM_BRACKET:
-        error_info = ERROR_PARAM_BRACKET; break;
+            error_info = ERROR_PARAM_BRACKET; break;
         case Verilog::ModuleParser::ERROR_PARAM_EQUAL:
-        error_info = ERROR_PARAM_EQUAL; break;
+            error_info = ERROR_PARAM_EQUAL; break;
     }
 
     TCHAR error_pos[ERROR_MESSAGE_SIZE];
@@ -94,20 +104,34 @@ const TCHAR *VerilogCmd::GetErrorMessage(Verilog::ModuleParser::GrammarError err
     return error_message_;
 }
 
+int VerilogCmd::AlignPortList(const char *code, char** aligned_code, int indent){
+    return instantiation_align_.GetAlignedCode(code, aligned_code, indent);
+}
+
+int VerilogCmd::AlignAssignment(const char *code, char **aligned_code, int indent){
+    return assignment_align_.GetAlignedCode(code, aligned_code, indent);
+}
+
+int VerilogCmd::AlignUnblockingAssignment(const char *code, char **aligned_code, int indent){
+    return unblocking_assign_align_.GetAlignedCode(code, aligned_code, indent);
+}
+
+/*
 unsigned int VerilogCmd::AlignPortList(const char *code, char** aligned_code){
-    // get info, calc buffer size
+    // calc buffer size
     unsigned int line_count(1);
     unsigned int line_len(0);
     unsigned int port_len(0), sig_len(0);
     unsigned int max_port_len(0), max_sig_len(0);
     unsigned int comment_len(0);
     unsigned int buffer_size(0);
+    char delimiters[3] = {'.', '(', ')'};
 
     enum {
         DOT,
         PORT,
         SIGNAL,
-        EOL,
+        EOL
     } state;
 
     const char* c = code;
@@ -115,11 +139,11 @@ unsigned int VerilogCmd::AlignPortList(const char *code, char** aligned_code){
     while (*c != '\0') {
         switch (state) {
         case DOT: {
-            if (*c == '.') state = PORT;
+            if (*c == delimiters[0]) state = PORT;
             break;
         }
         case PORT: {
-            if (*c == '(') {
+            if (*c == delimiters[1]) {
                 state = SIGNAL;
                 max_port_len = max_port_len < port_len ? port_len : max_port_len;
                 port_len = 0;
@@ -129,7 +153,7 @@ unsigned int VerilogCmd::AlignPortList(const char *code, char** aligned_code){
             break;
         }
         case SIGNAL: {
-            if (*c == ')') {
+            if (*c == delimiters[2]) {
                 state = EOL;
                 max_sig_len = max_sig_len < sig_len ? sig_len : max_sig_len;
                 sig_len = 0;
@@ -160,7 +184,7 @@ unsigned int VerilogCmd::AlignPortList(const char *code, char** aligned_code){
     buffer_size += comment_len;
     *aligned_code = new char[buffer_size+1];
 
-    //
+    // generate aligned code
     c = code;
     char* p = *aligned_code;
     char* start_of_line = *aligned_code;
@@ -173,33 +197,34 @@ unsigned int VerilogCmd::AlignPortList(const char *code, char** aligned_code){
         for (unsigned int j=0; j<right_bracket_pos+1; ++j) *(p++) = ' ';
         // write port name
         p = start_of_line + dot_pos + 1;
-        while (*c != '.' && *c != '\0') ++c;
+        while (*c != delimiters[0] && *c != '\0') ++c;
         if (*c == '\0') break; else ++c;
-        while (*c == ' ') ++c;
-        while (!(*c == ' ' || *c == '(') || *c == '\0') {
+        while (*c == ' ' || *c == '\t') ++c;
+        while (!(*c == delimiters[1] || *c == ' '  || *c == '\t' || *c == '\0')) {
             *(p++) = *(c++);
         }
         // write signal name
         p = start_of_line + left_bracket_pos + 2;
-        while (*c != '(' && *c != '\0') ++c;
+        while (*c != delimiters[1] && *c != '\0') ++c;
         if (*c == '\0') break; else ++c;
-        while (*c == ' ') ++c;
-        while (!(*c == ' ' || *c == ')' || *c == '\0')) {
+        while (*c == ' ' || *c == '\t') ++c;
+        while (!(*c == delimiters[2] || *c == ' '  || *c == '\t' || *c == '\0')) {
             *(p++) = *(c++);
         }
         // write the rest of current line
         p = start_of_line + right_bracket_pos + 1;
-        while (*c != ')' && *c != '\0') ++c;
+        while (*c != delimiters[2] && *c != '\0') ++c;
         if (*c == '\0') break; else ++c;
         while (*c != '\n' && *c != '\0') {
             *(p++) = *(c++);
         }
         if (*c != '\0') *(p++) = '\n';
         // write .()
-        start_of_line[dot_pos] = '.';
-        start_of_line[left_bracket_pos] = '(';
-        start_of_line[right_bracket_pos] = ')';
+        start_of_line[dot_pos] = delimiters[0];
+        start_of_line[left_bracket_pos] = delimiters[1];
+        start_of_line[right_bracket_pos] = delimiters[2];
     }
     *p = '\0';
     return buffer_size + 1;
 }
+*/

@@ -1,6 +1,7 @@
 #include <QCoreApplication>
 #include <../VerilogNppPlugin/verilog_cmd.h>
 #include <../VerilogNppPlugin/module_parser.h>
+#include <../VerilogNppPlugin/align.h>
 using namespace Verilog;
 #include <QDebug>
 #include <QString>
@@ -79,10 +80,25 @@ int main(int argc, char *argv[])
         "    .I_data ( I_data ),\n"
         "    .I_ws ( I_ws ) "
     };
+    //*
+    const char str[] = {
+        "a = 1;\n"
+        "bb=2;\n"
+        "c = 3; // comment\n"
+    };
+    //*/
     char* aligned_code(nullptr);
-    verilog.AlignPortList(port_list, &aligned_code);
+    Verilog::Align align;
+//    align.AddDelimeter(".", 4, 0);
+//    align.AddDelimeter("(", 1, 1);
+//    align.AddDelimeter(")", 1, 0);
+//    align.AddDelimeter(",", 0, 0);
+//    align.AddDelimeter("//", 2, 1);
+    align.AddDelimeter("=", 1, 1);
+    align.AddDelimeter(";", 0, 0);
+    align.AddDelimeter("//", 2, 1);
+    align.GetAlignedCode(str, &aligned_code, 4);
     qDebug() << aligned_code;
-    delete aligned_code;
 #endif
     return a.exec();
 }

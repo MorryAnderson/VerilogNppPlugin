@@ -26,6 +26,7 @@ INCLUDEPATH += \
     header_cmd
 
 SOURCES += \
+    align.cpp \
     module_parser.cpp \
     plugin_agent.cpp \
     plugin_cmd.cpp \
@@ -34,6 +35,7 @@ SOURCES += \
     verilog_cmd.cpp
 
 HEADERS += \
+    align.h \
     header_cmd/menu_cmd.h \
     header_cmd/notepad_plus_msgs.h \
     header_cmd/sci_position.h \

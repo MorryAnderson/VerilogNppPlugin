@@ -34,13 +34,13 @@ void CommandMenuInit(){
     //---------------------------------------//
     //-- STEP 3. CUSTOMIZE PLUGIN COMMANDS --//
     //---------------------------------------//
-    SetCommand(0, _T("Enabled"), Enabled);
+    SetCommand(0, _T("AutoComplete"), Enabled);
     SetCommand(1, _T("---"), nullptr);
     SetCommand(2, _T("Replace Declaration"), ReplaceModuleDeclaration);
     SetCommand(3, _T("Copy Instantiation"), CopyInstantiationTemplate);
     SetCommand(4, _T("Create Testbench"), CreateTestbench);
     SetCommand(5, _T("---"), nullptr);
-    SetCommand(6, _T("Auto Align"), AlignPortList);
+    SetCommand(6, _T("Auto Align"), AutoAlign);
 }
 
 void CommandMenuCleanUp(){

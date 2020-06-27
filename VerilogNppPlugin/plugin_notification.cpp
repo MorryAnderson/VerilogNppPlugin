@@ -96,13 +96,34 @@ void Notify::AutoCompleteCharDeleted(){
 
 void Notify::AutoCompleteCompleted(int /*position*/, const char* text){
     if (lstrcmpA(text, "begin") == 0) {
+        /* too many undo actions
         editor.NewLine();
         editor.NewLine();
         editor.InsertText(-1, "end");
         editor.LineUp();
         editor.Tab();
+        //*/
+        int cur_line = editor.LineFromPosition(editor.GetCurrentPos());
+        int indent = editor.GetLineIndentation(cur_line);
+
+        const char tab_spaces[5] = "    ";
+        char* str = new char[static_cast<unsigned int>(8+2*indent+4)];
+        char* indent_spaces = new char[static_cast<unsigned int>(indent+1)];
+        for (int i=0; i<indent; ++i) indent_spaces[i] = ' ';
+        indent_spaces[indent] = '\0';
+
+        str[0] = '\0';
+        lstrcatA(str, "\r\n");
+        lstrcatA(str, indent_spaces);
+        lstrcatA(str, tab_spaces);
+        lstrcatA(str, "\r\n");
+        lstrcatA(str, indent_spaces);
+        lstrcatA(str, "end");
+        editor.InsertText(-1, str);
+        editor.LineDown();
+        delete [] str;
     } else if (lstrcmpA(text, "module") == 0) {
-        editor.InsertText(-1, " (\n\n);\n\nendmodule\n");
+        editor.InsertText(-1, " (\r\n\r\n);\r\n\r\nendmodule\r\n");
         editor.LineDown();
         editor.Tab();
     }

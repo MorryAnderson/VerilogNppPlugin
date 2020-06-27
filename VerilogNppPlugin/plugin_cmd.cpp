@@ -119,28 +119,44 @@ void CreateTestbench(){
     editor.SetText(testbench_code);
 }
 
-void AlignPortList(){
+void AutoAlign(){
     int current_line = editor.LineFromPosition(editor.GetCurrentPos());
-    char c = GetFirstCharInLine(current_line);
-    if (c != '.') return;
+    int start_pos = editor.PositionFromLine(current_line);
+    int end_pos = editor.GetLineEndPosition(current_line);
+    if (LineStartsWithDot(start_pos, end_pos)) {
+        ReplaceLines(LineStartsWithDot, AlignPortList);
+    } else if (LineStartsWithRegOrWire(start_pos, end_pos)) {
+        ;
+    } else if (LineContainsUnblockingAssignment(start_pos, end_pos)) {
+        ReplaceLines(LineContainsUnblockingAssignment, AlignUnblockingAssignment);
+    } else if (LineContainsAssignment(start_pos, end_pos)) {
+        ReplaceLines(LineContainsAssignment, AlignAssignment);
+    }
+}
+
+void ReplaceLines(CheckLineFunc CheckLine, ProcFunc Process){
+    int current_line = editor.LineFromPosition(editor.GetCurrentPos());
+    int indent = editor.GetLineIndentation(current_line);
+    int start_pos = editor.PositionFromLine(current_line);
+    int end_pos = editor.GetLineEndPosition(current_line);
+    if (!CheckLine(start_pos, end_pos)) return;
+
     int line_count = editor.GetLineCount();
     int start_line(current_line), end_line(current_line);
 
     for (int i = current_line-1; i >= 0; --i) {
-        if (GetFirstCharInLine(i) != '.') {
-            start_line = i + 1;
-            break;
-        }
+        start_pos = editor.PositionFromLine(i);
+        end_pos = editor.GetLineEndPosition(i);
+        if (!CheckLine(start_pos, end_pos)) {start_line = i + 1; break;}
     }
     for (int i = current_line+1; i < line_count; ++i) {
-        if (GetFirstCharInLine(i) != '.') {
-            end_line = i - 1;
-            break;
-        }
+        start_pos = editor.PositionFromLine(i);
+        end_pos = editor.GetLineEndPosition(i);
+        if (!CheckLine(start_pos, end_pos)) {end_line = i - 1; break;}
     }
 
-    int start_pos = editor.PositionFromLine(start_line);
-    int end_pos = editor.GetLineEndPosition(end_line);
+    start_pos = editor.PositionFromLine(start_line);
+    end_pos = editor.GetLineEndPosition(end_line);
     editor.SetTargetStart(start_pos);
     editor.SetTargetEnd(end_pos);
 
@@ -149,22 +165,75 @@ void AlignPortList(){
     Sci_TextRange range = {{start_pos, end_pos}, code};
     editor.GetTextRange(&range);
 
-    char* aligned_code(nullptr);
-    verilog.AlignPortList(code, &aligned_code);
+    char* processed_code(nullptr);
+    Process(code, &processed_code, indent);
     editor.SetTargetRange(start_pos, end_pos);
-    editor.ReplaceTarget(-1, aligned_code);
+    editor.ReplaceTarget(-1, processed_code);
 
-    delete aligned_code;
     delete code;
 }
 
-char GetFirstCharInLine(int line){
-    int start_pos = editor.PositionFromLine(line);
-    int end_pos = editor.GetLineEndPosition(line);
+bool LineStartsWithDot(int start_pos, int end_pos){
     char c('\0');
     for (int i = start_pos; i <= end_pos; ++i) {
         c = static_cast<char>(editor.GetCharAt(i));
-        if (c != ' ') return c;
+        if (c != ' ' && c != '\t') break;
     }
-    return '\0';
+    return c == '.';
+}
+
+bool LineContainsAssignment(int start_pos, int end_pos){
+    char c('\0');
+    for (int i = start_pos; i <= end_pos; ++i) {
+        c = static_cast<char>(editor.GetCharAt(i));
+        if (c == '=') {
+            if (editor.GetCharAt(i-1) != '!' &&
+                    editor.GetCharAt(i-1) != '>' &&
+                    editor.GetCharAt(i-1) != '=') {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool LineContainsUnblockingAssignment(int start_pos, int end_pos){
+    char c('\0');
+    for (int i = start_pos; i <= end_pos; ++i) {
+        c = static_cast<char>(editor.GetCharAt(i));
+        if (c == '<') {
+            if (editor.GetCharAt(i+1) == '=') return true;
+        }
+    }
+    return false;
+}
+
+bool LineStartsWithRegOrWire(int start_pos, int end_pos){
+    char c('\0');
+    int first_char_pos(0);
+    int i(0);
+    for (i = start_pos; i <= end_pos; ++i) {
+        c = static_cast<char>(editor.GetCharAt(i));
+        if (c != ' ' && c != '\t') break;
+    }
+    first_char_pos = i;
+    char first_word[5] = {'\0'};
+    for (i=0; i<4; ++i) {
+        first_word[i] = static_cast<char>(editor.GetCharAt(first_char_pos + i));
+    }
+    first_word[4] = '\0';
+    if (lstrcmpA(first_word, "reg ") == 0 || lstrcmpA(first_word, "wire") == 0) return true;
+    else return false;
+}
+
+int AlignPortList(const char* code, char** aligned_code, int indent){
+    return verilog.AlignPortList(code, aligned_code, indent);
+}
+
+int AlignAssignment(const char* code, char** aligned_code, int indent){
+    return verilog.AlignAssignment(code, aligned_code, indent);
+}
+
+int AlignUnblockingAssignment(const char* code, char** aligned_code, int indent){
+    return verilog.AlignUnblockingAssignment(code, aligned_code, indent);
 }

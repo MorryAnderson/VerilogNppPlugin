@@ -3,6 +3,7 @@
 
 #include <tchar.h>
 #include "module_parser.h"
+#include "align.h"
 
 class VerilogCmd {
   public:  // autocomplete
@@ -24,7 +25,9 @@ class VerilogCmd {
     inline const TCHAR* GetMessageNoModule()const{return ERROR_NO_MODULE;}
 
   public:  // align
-    unsigned int AlignPortList(const char* code, char** aligned_code);
+    int AlignPortList(const char* code, char** aligned_code, int indent = 0);
+    int AlignAssignment(const char* code, char** aligned_code, int indent = 0);
+    int AlignUnblockingAssignment(const char* code, char** aligned_code, int indent = 0);
 
   private:  // autocomplete
     static const int KEYWORD_STR_SIZE = 2048;
@@ -36,6 +39,9 @@ class VerilogCmd {
 
   private:  // module
     Verilog::ModuleParser module_parser_;
+    Verilog::Align instantiation_align_;
+    Verilog::Align assignment_align_;
+    Verilog::Align unblocking_assign_align_;
     TCHAR error_message_[ERROR_MESSAGE_SIZE];
     TCHAR ERROR_NO_MODULE[ERROR_MESSAGE_SIZE];
     TCHAR POS_OF_ERROR[ERROR_MESSAGE_SIZE];
