@@ -14,7 +14,7 @@ void Align::AddDelimeter(const char* str, int left_padding, int right_padding){
     delimiters_.append({QString(str), left_padding, right_padding});
 }
 
-int Align::GetAlignedCode(const char* code, char** pointer, int indent){
+int Align::GetAlignedCode(const QString& code, char** pointer, int indent){
     aligned_code_.clear();
     //
     QString code_str(code);
@@ -91,7 +91,7 @@ int Align::GetAlignedCode(const char* code, char** pointer, int indent){
                                                       + delimiters_.at(i).right_padding;
         }
     }
-    row_len += 1;  // '\n'
+    row_len += 2;  // '\r\n'
     //! [calc row len]
 
     //! [generate aligned code]
@@ -112,11 +112,38 @@ int Align::GetAlignedCode(const char* code, char** pointer, int indent){
             }
         }
         aligned_code_ += cell_table[row][delimiter_num].leftJustified(column_len.at(delimiter_num));
-        aligned_code_ += '\n';
+        aligned_code_ += "\r\n";
     }
-    aligned_code_.chop(1);
+    aligned_code_.chop(2);
     //! [generate aligned code]
     //
+    aligned_code_utf8_ = aligned_code_.toUtf8();
+    if (pointer) *pointer = aligned_code_utf8_.data();
+    return aligned_code_utf8_.length();
+}
+
+int Align::AlignVariableDecl(const char* code, char** pointer, int indent){
+    aligned_code_.clear();
+    int left_padding = delimiters_.at(0).left_padding;
+    int right_padding = delimiters_.at(2).right_padding;
+    //
+    QString code_str(code);
+    bool contains_range = code_str.contains(QRegExp("\\[.*:.*\\]"));
+    if (!contains_range) {
+        delimiters_[0].left_padding = 0;
+        delimiters_[2].right_padding = 0;
+    }
+    code_str.replace(QRegExp("(wire|reg)\\s+(signed|unsigned)?\\s*(\\w+)"), "\\1 \\2 [:] \\3");
+    GetAlignedCode(code_str, pointer, indent);
+
+    if (contains_range) {
+        aligned_code_.replace(QRegExp("\\[(\\s*):(\\s*)\\]"), " \\1 \\2 ");
+    } else {
+        aligned_code_.replace(QRegExp("\\[(\\s*):(\\s*)\\]"), " ");
+    }
+    //
+    delimiters_[0].left_padding = left_padding;
+    delimiters_[2].right_padding = right_padding;
     aligned_code_utf8_ = aligned_code_.toUtf8();
     if (pointer) *pointer = aligned_code_utf8_.data();
     return aligned_code_utf8_.length();

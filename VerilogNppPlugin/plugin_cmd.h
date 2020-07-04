@@ -15,7 +15,7 @@ void SetEnabled(bool);
 void TrackLangName();
 int RetrieveModuleBlock(char **, int* start = nullptr, int* end = nullptr);
 bool RetrieveAndParseModule(int* start = nullptr, int* end = nullptr);
-void ReplaceLines(CheckLineFunc, ProcFunc);
+void ReplaceLines(CheckLineFunc, ProcFunc, int);
 bool LineStartsWithDot(int start_pos, int end_pos);
 bool LineContainsAssignment(int start_pos, int end_pos);
 bool LineContainsUnblockingAssignment(int start_pos, int end_pos);
@@ -23,5 +23,6 @@ bool LineStartsWithRegOrWire(int start_pos, int end_pos);
 int AlignPortList(const char*, char**, int indent = 0);
 int AlignAssignment(const char*, char**, int indent = 0);
 int AlignUnblockingAssignment(const char*, char**, int indent = 0);
+int AlignVariableDecl(const char*, char**, int indent = 0);
 
 #endif // PLUGIN_CMD_H

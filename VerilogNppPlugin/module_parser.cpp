@@ -1,6 +1,8 @@
 #include "module_parser.h"
 using namespace Verilog;
 
+const char ENDL[3] = "\r\n";
+
 ModuleParser::ModuleParser() : lexer_state_(LEXER_MODULE), last_error_pos_(0), last_comma_pos_(0){
     max_port_dir_len_ = max_port_type_len_ = 0;
     max_port_sign_len_ = max_port_name_len_ = 0;
@@ -92,7 +94,7 @@ bool ModuleParser::ParseModule(const char * code){
         case PARSER_TOKEN: {
             state = (state == PARSER_LAST) ? PARSER_END : PARSER_EMPTY;
             // special process for line comments
-            if (token[0] == '/') while (*code_it != '\n') *(token_it++) = *(code_it++);
+            if (token[0] == '/') while (*code_it != '\r' && *code_it != '\n') *(token_it++) = *(code_it++);
             *token_it = '\0';
             token_it = token;
             // lexer, check grammar
@@ -152,7 +154,7 @@ int ModuleParser::GetFormattedCode(const char **pointer){
         formatted_code_.append(KEYWORD_PARAM);
         //! [align params]
         foreach (param, module_structure_.params) {
-            formatted_code_.append("\n");
+            formatted_code_.append(ENDL);
             // head comment
             InsertHeadComments(param);
             // sign
@@ -180,7 +182,7 @@ int ModuleParser::GetFormattedCode(const char **pointer){
     if (!module_structure_.ports.isEmpty()) {
         //! [align ports]
         foreach (port, module_structure_.ports) {
-            formatted_code_.append("\n");
+            formatted_code_.append(ENDL);
             // head comment
             InsertHeadComments(port);
             // dir & type & sign
@@ -216,13 +218,15 @@ int ModuleParser::GetInstantiationTemplate(const char **pointer){
     if (!module_structure_.params.isEmpty()) {
         instantiation_template_.append(" #(");
         foreach (param, module_structure_.params) {
-            instantiation_template_.append(QString("\n%1.%2 ( %3 ),").arg(TAB)
+            instantiation_template_.append(ENDL);
+            instantiation_template_.append(QString("%1.%2 ( %3 ),").arg(TAB)
                                            .arg(param.var.name.leftJustified(max_param_name_len_))
                                            .arg(param.value.leftJustified(max_param_value_len_))
             );
         }
         instantiation_template_.chop(1);
-        instantiation_template_.append("\n)");
+        instantiation_template_.append(ENDL);
+        instantiation_template_.append(")");
     }
     instantiation_template_.append(" INST_");
     instantiation_template_.append(module_structure_.name);
@@ -230,12 +234,13 @@ int ModuleParser::GetInstantiationTemplate(const char **pointer){
     instantiation_template_.append(" (");
     if (!module_structure_.ports.isEmpty()) {
         foreach (port, module_structure_.ports) {
-            instantiation_template_.append(QString("\n%1.%2 ( %2 ),").arg(TAB)
+            instantiation_template_.append(ENDL);
+            instantiation_template_.append(QString("%1.%2 ( %2 ),").arg(TAB)
                                            .arg(port.var.name.leftJustified(max_port_name_len_))
             );
         }
         instantiation_template_.chop(1);
-        instantiation_template_.append("\n");
+        instantiation_template_.append(ENDL);
     }
     instantiation_template_.append(");");
     //
@@ -251,21 +256,26 @@ int ModuleParser::GetTestbenchTemplate(const char **pointer){
     QString clock_CLK, reset_RST_N;
 
     //! [testbench module]
-    testbench_template_.append("`timescale 1ns/1ns\n\nmodule TB_");
+    testbench_template_.append("`timescale 1ns/1ns");
+    testbench_template_.append(ENDL);
+    testbench_template_.append(ENDL);
+    testbench_template_.append("module TB_");
     testbench_template_.append(module_structure_.name);
-    testbench_template_.append("();\n");
+    testbench_template_.append("();");
+    testbench_template_.append(ENDL);
     //! [testbench module]
 
     //! [params]
     if (!module_structure_.params.empty()) {
         Parameter param;
         foreach (param, module_structure_.params) {
-            testbench_template_.append(QString("\nlocalparam %1 = %2 ;")
+            testbench_template_.append(ENDL);
+            testbench_template_.append(QString("localparam %1 = %2 ;")
                                        .arg(param.var.name.leftJustified(max_param_name_len_))
                                        .arg(param.value.leftJustified(max_param_value_len_))
             );
         }
-        testbench_template_.append("\n");
+        testbench_template_.append(ENDL);
     }
     //! [params]
 
@@ -274,7 +284,7 @@ int ModuleParser::GetTestbenchTemplate(const char **pointer){
         int max_type_len = 4;  // wire reg
         Port port;
         foreach (port, module_structure_.ports) {
-            testbench_template_.append("\n");
+            testbench_template_.append(ENDL);
             if (port.var.name.endsWith("_CLK")) clock_CLK = port.var.name;
             else if (port.var.name.endsWith("_RST_N")) reset_RST_N = port.var.name;
             // type
@@ -293,28 +303,33 @@ int ModuleParser::GetTestbenchTemplate(const char **pointer){
             if (port.dir == KEYWORD_INPUT) testbench_template_.append("= 0");
             testbench_template_.append(";");
         }
-        testbench_template_.append("\n");
+        testbench_template_.append(ENDL);
     }
     //! [variables]
 
     //! [instantiation]
     GetInstantiationTemplate(nullptr);
-    testbench_template_.append("\n");
+    testbench_template_.append(ENDL);
     testbench_template_.append(instantiation_template_);
-    testbench_template_.append("\n");
+    testbench_template_.append(ENDL);
     //! [instantiation]
 
     //! [initial]
-    testbench_template_.append("\n");
+    testbench_template_.append(ENDL);
     if (!clock_CLK.isEmpty()) {
-        testbench_template_.append(QString("initial forever #10/2 %1 = ~%1;\n\n").arg(clock_CLK));
+        testbench_template_.append(QString("initial forever #10/2 %1 = ~%1;").arg(clock_CLK));
+        testbench_template_.append(ENDL);
+        testbench_template_.append(ENDL);
     }
     if (!reset_RST_N.isEmpty()) {
-        testbench_template_.append(QString("initial #10 %1 = 1'b1;\n\n").arg(reset_RST_N));
+        testbench_template_.append(QString("initial #10 %1 = 1'b1;").arg(reset_RST_N));
+        testbench_template_.append(ENDL);
+        testbench_template_.append(ENDL);
     }
     //! [initial]
 
-    testbench_template_.append("endmodule\n");
+    testbench_template_.append("endmodule");
+    testbench_template_.append(ENDL);
 
     testbench_template_utf8_ = testbench_template_.toUtf8();
     if (pointer) *pointer = testbench_template_utf8_.data();
@@ -557,7 +572,7 @@ void ModuleParser::InsertHeadComments(const P& p){
     foreach (comment, p.var.head_comment) {
         formatted_code_.append(TAB);
         formatted_code_.append(comment);
-        formatted_code_.append("\n");
+        formatted_code_.append(ENDL);
     }
 }
 
@@ -585,5 +600,5 @@ void ModuleParser::InsertTailComments(const P& p){
 void ModuleParser::RemoveLastComma(){
     last_comma_pos_ = formatted_code_.length() - last_comma_pos_ - 1;
     formatted_code_[last_comma_pos_] = ' ';
-    formatted_code_.append("\n");
+    formatted_code_.append(ENDL);
 }

@@ -124,18 +124,19 @@ void AutoAlign(){
     int start_pos = editor.PositionFromLine(current_line);
     int end_pos = editor.GetLineEndPosition(current_line);
     if (LineStartsWithDot(start_pos, end_pos)) {
-        ReplaceLines(LineStartsWithDot, AlignPortList);
+        ReplaceLines(LineStartsWithDot, AlignPortList, current_line);
     } else if (LineStartsWithRegOrWire(start_pos, end_pos)) {
-        ;
-    } else if (LineContainsUnblockingAssignment(start_pos, end_pos)) {
-        ReplaceLines(LineContainsUnblockingAssignment, AlignUnblockingAssignment);
+        ReplaceLines(LineStartsWithRegOrWire, AlignVariableDecl, current_line);
+    }
+    if (LineContainsUnblockingAssignment(start_pos, end_pos)) {
+        ReplaceLines(LineContainsUnblockingAssignment, AlignUnblockingAssignment, current_line);
     } else if (LineContainsAssignment(start_pos, end_pos)) {
-        ReplaceLines(LineContainsAssignment, AlignAssignment);
+        ReplaceLines(LineContainsAssignment, AlignAssignment, current_line);
     }
 }
 
-void ReplaceLines(CheckLineFunc CheckLine, ProcFunc Process){
-    int current_line = editor.LineFromPosition(editor.GetCurrentPos());
+void ReplaceLines(CheckLineFunc CheckLine, ProcFunc Process, int line){
+    int current_line = line;
     int indent = editor.GetLineIndentation(current_line);
     int start_pos = editor.PositionFromLine(current_line);
     int end_pos = editor.GetLineEndPosition(current_line);
@@ -147,12 +148,20 @@ void ReplaceLines(CheckLineFunc CheckLine, ProcFunc Process){
     for (int i = current_line-1; i >= 0; --i) {
         start_pos = editor.PositionFromLine(i);
         end_pos = editor.GetLineEndPosition(i);
-        if (!CheckLine(start_pos, end_pos)) {start_line = i + 1; break;}
+        if (CheckLine(start_pos, end_pos)) {
+            start_line = i;
+        } else {
+            break;
+        }
     }
     for (int i = current_line+1; i < line_count; ++i) {
         start_pos = editor.PositionFromLine(i);
         end_pos = editor.GetLineEndPosition(i);
-        if (!CheckLine(start_pos, end_pos)) {end_line = i - 1; break;}
+        if (CheckLine(start_pos, end_pos)) {
+            end_line = i;
+        } else {
+            break;
+        }
     }
 
     start_pos = editor.PositionFromLine(start_line);
@@ -236,4 +245,8 @@ int AlignAssignment(const char* code, char** aligned_code, int indent){
 
 int AlignUnblockingAssignment(const char* code, char** aligned_code, int indent){
     return verilog.AlignUnblockingAssignment(code, aligned_code, indent);
+}
+
+int AlignVariableDecl(const char* code, char** aligned_code, int indent){
+    return verilog.AlignVariableDecl(code, aligned_code, indent);
 }

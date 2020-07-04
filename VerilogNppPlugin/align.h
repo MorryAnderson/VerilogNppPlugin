@@ -11,7 +11,8 @@ class Align {
     Align();
     void Reset();
     void AddDelimeter(const char*, int left_padding = 0, int right_padding = 0);
-    int GetAlignedCode(const char*, char**, int indent = 0);
+    int GetAlignedCode(const QString&, char**, int indent = 0);
+    int AlignVariableDecl(const char*, char**, int indent = 0);
 
   private:
     struct Delimeter {

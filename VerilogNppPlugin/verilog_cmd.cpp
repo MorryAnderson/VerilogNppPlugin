@@ -12,17 +12,26 @@ VerilogCmd::VerilogCmd() : enabled_(false), autocomplete_len_(2){
     ERROR_PORT_END[0] = '\0';
     ERROR_PARAM_BRACKET[0] = '\0';
     ERROR_PARAM_EQUAL[0] = '\0';
-    instantiation_align_.AddDelimeter(".", 4, 0);
+
+    instantiation_align_.AddDelimeter(".", 0, 0);
     instantiation_align_.AddDelimeter("(", 1, 1);
     instantiation_align_.AddDelimeter(")", 1, 0);
     instantiation_align_.AddDelimeter(",", 0, 0);
     instantiation_align_.AddDelimeter("//", 2, 0);
+
     assignment_align_.AddDelimeter("=", 1, 1);
     assignment_align_.AddDelimeter(";", 0, 0);
     assignment_align_.AddDelimeter("//", 2, 0);
+
     unblocking_assign_align_.AddDelimeter("<=", 1, 1);
     unblocking_assign_align_.AddDelimeter(";", 0, 0);
     unblocking_assign_align_.AddDelimeter("//", 2, 0);
+
+    variable_align_.AddDelimeter("[", 1, 0);
+    variable_align_.AddDelimeter(":", 0, 0);
+    variable_align_.AddDelimeter("]", 0, 1);
+    variable_align_.AddDelimeter(";", 1, 0);
+    variable_align_.AddDelimeter("//", 2, 1);
 }
 
 VerilogCmd::VerilogCmd(const TCHAR* dir) : VerilogCmd(){
@@ -114,6 +123,10 @@ int VerilogCmd::AlignAssignment(const char *code, char **aligned_code, int inden
 
 int VerilogCmd::AlignUnblockingAssignment(const char *code, char **aligned_code, int indent){
     return unblocking_assign_align_.GetAlignedCode(code, aligned_code, indent);
+}
+
+int VerilogCmd::AlignVariableDecl(const char *code, char **aligned_code, int indent){
+    return variable_align_.AlignVariableDecl(code, aligned_code, indent);
 }
 
 /*

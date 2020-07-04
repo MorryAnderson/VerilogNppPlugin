@@ -82,22 +82,18 @@ int main(int argc, char *argv[])
     };
     //*
     const char str[] = {
-        "a = 1;\n"
-        "bb=2;\n"
-        "c = 3; // comment\n"
+       "wire [63:0] flash_id;\n"
+       "wire flash_id_valid;"
     };
     //*/
     char* aligned_code(nullptr);
     Verilog::Align align;
-//    align.AddDelimeter(".", 4, 0);
-//    align.AddDelimeter("(", 1, 1);
-//    align.AddDelimeter(")", 1, 0);
-//    align.AddDelimeter(",", 0, 0);
-//    align.AddDelimeter("//", 2, 1);
-    align.AddDelimeter("=", 1, 1);
-    align.AddDelimeter(";", 0, 0);
+    align.AddDelimeter("[", 1, 0);
+    align.AddDelimeter(":", 0, 0);
+    align.AddDelimeter("]", 0, 1);
+    align.AddDelimeter(";", 1, 0);
     align.AddDelimeter("//", 2, 1);
-    align.GetAlignedCode(str, &aligned_code, 4);
+    align.AlignVariableDecl(str, &aligned_code, 0);
     qDebug() << aligned_code;
 #endif
     return a.exec();
