@@ -12,12 +12,11 @@ const TCHAR kNppPluginName[] = _T("Verilog HDL");
 //------------------------------------------//
 const int kFunCount = 7;
 
-NppData npp_data;
-
 static FuncItem func_item[kFunCount];
 
 FuncItem* GetFuncItem(){return func_item;}
 
+NotepadPlus npp;
 ScintillaEditor editor;
 VerilogCmd verilog;
 
@@ -29,7 +28,7 @@ void PluginCleanUp(){
 
 void CommandMenuInit(){
     TCHAR config_dir[MAX_PATH];
-    ::SendMessage(npp_data._nppHandle, NPPM_GETPLUGINSCONFIGDIR, MAX_PATH, reinterpret_cast<LPARAM>(config_dir));
+    npp.GetPluginsConfigDir(MAX_PATH, config_dir);
     verilog.LoadIniFile(config_dir);
     //---------------------------------------//
     //-- STEP 3. CUSTOMIZE PLUGIN COMMANDS --//
@@ -44,7 +43,7 @@ void CommandMenuInit(){
 }
 
 void CommandMenuCleanUp(){
-	// Don't forget to deallocate your shortcut here
+    // Don't forget to deallocate your shortcut here
 }
 
 bool SetCommand(size_t index, const TCHAR *cmd_name, PFUNCPLUGINCMD p_func, ShortcutKey *shortcut, bool check_on_init){
@@ -61,6 +60,6 @@ bool SetCommand(size_t index, const TCHAR *cmd_name, PFUNCPLUGINCMD p_func, Shor
 
 HWND GetCurrentScintilla(){
     int which = 0;
-    ::SendMessage(npp_data._nppHandle, NPPM_GETCURRENTSCINTILLA, SCI_UNUSED, reinterpret_cast<LPARAM>(&which));
-    return (which == 0) ? npp_data._scintillaMainHandle : npp_data._scintillaSecondHandle;
+    npp.GetCurrentScintilla(&which);
+    return (which == 0) ? npp.GetNppData()._scintillaMainHandle : npp.GetNppData()._scintillaSecondHandle;
 }

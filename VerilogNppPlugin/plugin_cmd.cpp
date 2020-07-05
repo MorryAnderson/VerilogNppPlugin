@@ -27,7 +27,7 @@ void ReplaceModuleDeclaration(){
 
 void SetEnabled(bool new_state){
     verilog.set_enabled(new_state);
-    ::SendMessage(npp_data._nppHandle, NPPM_SETMENUITEMCHECK, static_cast<WPARAM>(GetFuncItem()[0]._cmdID), new_state);
+    npp.SetMenuItemCheck(GetFuncItem()[0]._cmdID, new_state);
 }
 
 void TrackLangName(){
@@ -35,10 +35,10 @@ void TrackLangName(){
     int lang_name_len(0);
     wchar_t* lang_name(nullptr);
 
-    ::SendMessage(npp_data._nppHandle, NPPM_GETCURRENTLANGTYPE, 0, reinterpret_cast<LPARAM>(&lang_type));
-    lang_name_len = ::SendMessage(npp_data._nppHandle, NPPM_GETLANGUAGENAME, static_cast<WPARAM>(lang_type), reinterpret_cast<LPARAM>(nullptr));
+    npp.GetCurrentLangType(&lang_type);
+    lang_name_len = npp.GetLanguageName(lang_type, nullptr);
     lang_name = new wchar_t[static_cast<unsigned int>(lang_name_len+1)];
-    ::SendMessage(npp_data._nppHandle, NPPM_GETLANGUAGENAME, static_cast<WPARAM>(lang_type), reinterpret_cast<LPARAM>(lang_name));
+    npp.GetLanguageName(lang_type, lang_name);
 
     if (wcscmp(lang_name, VERILOG_LANG_NAME_1) == 0 || wcscmp(lang_name, VERILOG_LANG_NAME_2) == 0) {
         SetEnabled(true);
@@ -115,7 +115,7 @@ void CreateTestbench(){
     if (RetrieveAndParseModule() == false) return;
     const char* testbench_code(nullptr);
     verilog.GetTestbenchTemplate(&testbench_code);
-    ::SendMessage(npp_data._nppHandle, NPPM_MENUCOMMAND, 0, IDM_FILE_NEW);
+    npp.MenuCommand(IDM_FILE_NEW);
     editor.SetText(testbench_code);
 }
 

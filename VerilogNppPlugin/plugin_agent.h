@@ -13,8 +13,8 @@ extern const int kFunCount;
 /// the plugin commands data
 FuncItem* GetFuncItem();
 
-/// The data of Notepad++ used in plugin commands
-extern NppData npp_data;
+/// The class that represents the Notepadd++
+extern NotepadPlus npp;
 
 /// The class that represents the Scintilla Editor
 extern ScintillaEditor editor;

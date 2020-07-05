@@ -21,10 +21,10 @@ BOOL APIENTRY DllMain(HANDLE h_module, DWORD  reason_for_call, LPVOID /*lpReserv
     return TRUE;
 }
 
-void setInfo(NppData notpad_plus_data){
-    npp_data = notpad_plus_data;
+void setInfo(NppData notepad_plus_data){
     // Set this as early as possible so it's in a valid state
-    editor.SetScintillaInstance(npp_data._scintillaMainHandle);
+    npp.SetNppData(notepad_plus_data);
+    editor.SetScintillaInstance(notepad_plus_data._scintillaMainHandle);
     CommandMenuInit();
 }
 

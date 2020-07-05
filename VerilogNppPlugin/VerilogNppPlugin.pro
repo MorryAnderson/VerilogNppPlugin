@@ -37,11 +37,13 @@ SOURCES += \
 HEADERS += \
     align.h \
     header_cmd/menu_cmd.h \
+    header_cmd/notepad_plus.h \
     header_cmd/notepad_plus_msgs.h \
     header_cmd/sci_position.h \
     header_cmd/scintilla.h \
     header_cmd/scintilla_editor.h \
     module_parser.h \
+    notepad_plus.h \
     plugin_agent.h \
     plugin_cmd.h \
     plugin_interface.h \

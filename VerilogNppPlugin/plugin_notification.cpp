@@ -81,6 +81,10 @@ void Notify::NppSnapshotDirtyFileLoaded(uptr_t /* buffer_id */){
 }
 
 void Notify::NppToolbarModification(){
+//    toolbarIcons icon;
+//    icon.hToolbarBmp;
+//    icon.hToolbarIcon;
+//    npp.AddToolbarIcon(GetFuncItem()[2]._cmdID, &icon);
 }
 
 void Notify::NppWordStylesUpdated(uptr_t /* buffer_id */){
@@ -123,9 +127,28 @@ void Notify::AutoCompleteCompleted(int /*position*/, const char* text){
         editor.LineDown();
         delete [] str;
     } else if (lstrcmpA(text, "module") == 0) {
-        editor.InsertText(-1, " (\r\n\r\n);\r\n\r\nendmodule\r\n");
+        editor.InsertText(-1,
+                          " (\r\n"
+                          "    \r\n"
+                          ");\r\n"
+                          "\r\n"
+                          "endmodule\r\n");
         editor.LineDown();
-        editor.Tab();
+    } else if (lstrcmpA(text, "always") == 0) {
+        editor.InsertText(-1,
+                          " @(posedge I_CLK, negedge I_RST_N) begin\r\n"
+                          "    if (~I_RST_N) begin\r\n"
+                          "         <= 0;\r\n"
+                          "    end \r\n"
+                          "    else begin\r\n"
+                          "        \r\n"
+                          "    end\r\n"
+                          "end"
+                          );
+        editor.LineDown();
+        editor.LineDown();
+        editor.CharRight();
+        editor.CharRight();
     }
 }
 
