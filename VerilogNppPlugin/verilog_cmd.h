@@ -14,6 +14,8 @@ class VerilogCmd {
     inline void set_enabled(bool state){enabled_ = state;}
     inline int get_autocomplete_len()const{return autocomplete_len_;}
     inline const char* get_keywords()const{return keywords_;}
+    inline const char* get_functions()const{return functions_;}
+    inline const char* get_directives()const{return directives_;}
 
   public:  // module
     bool ParseModule(const char*);
@@ -31,15 +33,17 @@ class VerilogCmd {
     int AlignVariableDecl(const char* code, char** aligned_code, int indent = 0);
 
   private:  // autocomplete
-    static const int KEYWORD_STR_SIZE = 2048;
-    static constexpr TCHAR inifilename[] = L"\\verilog.ini";
-    char keywords_[KEYWORD_STR_SIZE];
-    static const int ERROR_MESSAGE_SIZE = 128;
     bool enabled_;
+    static const int KEYWORD_STR_SIZE = 2048;
+    char keywords_[KEYWORD_STR_SIZE];
+    char functions_[KEYWORD_STR_SIZE];
+    char directives_[KEYWORD_STR_SIZE];
     int autocomplete_len_;
 
   private:  // module
     Verilog::ModuleParser module_parser_;
+    static constexpr TCHAR inifilename[] = L"\\verilog.ini";
+    static const int ERROR_MESSAGE_SIZE = 128;
     TCHAR error_message_[ERROR_MESSAGE_SIZE];
     TCHAR ERROR_NO_MODULE[ERROR_MESSAGE_SIZE];
     TCHAR POS_OF_ERROR[ERROR_MESSAGE_SIZE];

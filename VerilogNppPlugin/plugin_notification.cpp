@@ -99,6 +99,7 @@ void Notify::AutoCompleteCharDeleted(){
 }
 
 void Notify::AutoCompleteCompleted(int /*position*/, const char* text){
+    // insert templates
     if (lstrcmpA(text, "begin") == 0) {
         /* too many undo actions
         editor.NewLine();
@@ -162,16 +163,27 @@ void Notify::AutoCompleteSelectionChange(int /*position*/, const char* /*text*/)
 void Notify::CallTipClick(){
 }
 
-void Notify::CharAdded(int /*ch*/){
-    // Find the word start
-    int current_pos = editor.GetCurrentPos();
-    int word_start_pos = editor.WordStartPosition(current_pos, true);
+void Notify::CharAdded(int ch){
+    if (!editor.AutoCActive()) {
+        if (ch == '$') {
+            editor.AutoCShow(1, verilog.get_functions());
+        } else if (ch == '`') {
+            editor.AutoCShow(1, verilog.get_directives());
+        } else {
+            // Find the word start
+            int current_pos = editor.GetCurrentPos();
+            int word_start_pos = editor.WordStartPosition(current_pos, true);
 
-    // Display the autocompletion list
-    int len_entered = current_pos - word_start_pos;
-    if (len_entered >= verilog.get_autocomplete_len()) {
-        if (!editor.AutoCActive()) editor.AutoCShow(len_entered, verilog.get_keywords());
+            // Display the autocompletion list
+            int len_entered = current_pos - word_start_pos;
+            if (len_entered >= verilog.get_autocomplete_len()) {
+//                if (!editor.AutoCActive()) {
+                    editor.AutoCShow(len_entered, verilog.get_keywords());
+//                }
+            }
+        }
     }
+
 }
 
 void Notify::DoubleClick(int /*position*/, int /*line*/){

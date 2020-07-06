@@ -1,7 +1,7 @@
 #include "verilog_cmd.h"
 #include <Windows.h>
 
-VerilogCmd::VerilogCmd() : enabled_(false), autocomplete_len_(2){
+VerilogCmd::VerilogCmd() : enabled_(false)/*, autocomplete_len_(2)*/{
     error_message_[0] = '\0';
     ERROR_NO_MODULE[0] = '\0';
     POS_OF_ERROR[0] = '\0';
@@ -40,17 +40,26 @@ VerilogCmd::VerilogCmd(const TCHAR* dir) : VerilogCmd(){
 
 void VerilogCmd::LoadIniFile(const TCHAR* dir){
     TCHAR inifilepath[MAX_PATH];
-    TCHAR keywords_w[KEYWORD_STR_SIZE*2];
+    TCHAR key_w[KEYWORD_STR_SIZE*2];
 
     lstrcpyW(inifilepath, dir);
     lstrcatW(inifilepath, inifilename);
 
     autocomplete_len_ = static_cast<int>(::GetPrivateProfileIntW(_T("autocomplete"), _T("length"), 2, inifilepath));
-    ::GetPrivateProfileString(_T("autocomplete"), _T("keywords"), L"", keywords_w, KEYWORD_STR_SIZE*2, inifilepath);
 
-    if (0x02 == ::GetLastError()) ::MessageBox(nullptr, _T("verilog.ini not found"), _T("WARNING"), MB_OK);
+    if (0x02 == ::GetLastError()) {
+        ::MessageBox(nullptr, _T("verilog.ini not found"), _T("WARNING"), MB_OK);
+        return;
+    }
 
-    wcstombs_s(nullptr, keywords_, KEYWORD_STR_SIZE, keywords_w, KEYWORD_STR_SIZE);
+    ::GetPrivateProfileString(_T("autocomplete"), _T("keywords"), L"", key_w, KEYWORD_STR_SIZE*2, inifilepath);
+    wcstombs_s(nullptr, keywords_, KEYWORD_STR_SIZE, key_w, KEYWORD_STR_SIZE);
+
+    ::GetPrivateProfileString(_T("autocomplete"), _T("functions"), L"", key_w, KEYWORD_STR_SIZE*2, inifilepath);
+    wcstombs_s(nullptr, functions_, KEYWORD_STR_SIZE, key_w, KEYWORD_STR_SIZE);
+
+    ::GetPrivateProfileString(_T("autocomplete"), _T("directives"), L"", key_w, KEYWORD_STR_SIZE*2, inifilepath);
+    wcstombs_s(nullptr, directives_, KEYWORD_STR_SIZE, key_w, KEYWORD_STR_SIZE);
 
     // error messages
     ::GetPrivateProfileString(_T("error message"), _T("error_no_module"    ), L"", ERROR_NO_MODULE    , ERROR_MESSAGE_SIZE, inifilepath);
