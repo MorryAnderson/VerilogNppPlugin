@@ -317,7 +317,7 @@ int ModuleParser::GetTestbenchTemplate(const char **pointer){
     //! [initial]
     testbench_template_.append(ENDL);
     if (!clock_CLK.isEmpty()) {
-        testbench_template_.append(QString("initial forever #10/2 %1 = ~%1;").arg(clock_CLK));
+        testbench_template_.append(QString("initial forever #(10/2) %1 = ~%1;").arg(clock_CLK));
         testbench_template_.append(ENDL);
         testbench_template_.append(ENDL);
     }

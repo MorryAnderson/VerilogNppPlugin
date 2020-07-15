@@ -2,10 +2,10 @@
     <UserLang name="VerilogHDL" ext="v" udlVersion="2.1">
         <Settings>
             <Global caseIgnored="yes" allowFoldOfComments="yes" foldCompact="no" forcePureLC="0" decimalSeparator="0" />
-            <Prefix Keywords1="no" Keywords2="no" Keywords3="no" Keywords4="yes" Keywords5="no" Keywords6="yes" Keywords7="yes" Keywords8="yes" />
+            <Prefix Keywords1="yes" Keywords2="no" Keywords3="no" Keywords4="yes" Keywords5="no" Keywords6="yes" Keywords7="yes" Keywords8="no" />
         </Settings>
         <KeywordLists>
-            <Keywords name="Comments">00// 01 02((EOL)) 03/* 04*/</Keywords>
+            <Keywords name="Comments">00// 01 02 03/* 04*/</Keywords>
             <Keywords name="Numbers, prefix1"></Keywords>
             <Keywords name="Numbers, prefix2">b B d D o O h H #</Keywords>
             <Keywords name="Numbers, extras1">a b c d e f A B C D E F ? _</Keywords>
@@ -24,14 +24,14 @@
             <Keywords name="Folders in comment, open"></Keywords>
             <Keywords name="Folders in comment, middle"></Keywords>
             <Keywords name="Folders in comment, close"></Keywords>
-            <Keywords name="Keywords1">module endmodule function endfunction task endtask primitive endprimitive table endtable&#x000D;&#x000A;initial always assign force event&#x000D;&#x000A;posedge negedge&#x000D;&#x000A;input &#x000D;&#x000A;if &quot;else if&quot; else case casex casez endcase default for while forever repeat join &#x000D;&#x000A;</Keywords>
+            <Keywords name="Keywords1">PAR_ STATE_</Keywords>
             <Keywords name="Keywords2">output inout</Keywords>
             <Keywords name="Keywords3">reg wire integer real realtime time parameter localparam defparam</Keywords>
             <Keywords name="Keywords4">I_ O_ B_</Keywords>
             <Keywords name="Keywords5">`celldefine `default_nettype `define `else `elsif `endcelldefine `endif `ifdef `ifndef `include `line `nounconnected_drive `resetall `timescale `unconnected_drive `undef&#x000D;&#x000A;$dumpfile $dumpvars $dumpoff $dumpon $dumpall $dumplimit$dumpports $dumpportsall $dumpportsflush $dumpportslimit $dumpportsoff $dumpportson&#x000D;&#x000A;$async$and$array $async$and$plane $async$nand$array $async$nand$plane $async$nor$array $async$nor$plane $async$or$array $async$or$plane $bitstoreal $display $displayb $displayh $displayo $dist_chi_square $dist_erlang $dist_exponential $dist_normal $dist_poisson $dist_t $dist_uniform $fclose $fdisplay $fdisplayb $fdisplayh $fdisplayo $ferror $fflush $fgetc $fgets $finish $fmonitor $fmonitorb $fmonitorh $fmonitoro $fopen $fread $fscanf $fseek $fstrobe $fstrobeb $fstrobeh $fstrobeo $ftell $fwrite $fwriteb $fwriteh $fwriteo $itor $monitor $monitorb $monitorh $monitoro $monitoroff $monitoron $printtimescale $q_add $q_exam $q_full $q_initialize $q_remove $random $readmemb $readmemh $realtime $realtobits $rewind $rtoi $sdf_annotate $sformat $signed $sscanf $stime $stop $strobe $strobeb $strobeh $strobeo $swrite $swriteb $swriteh $swriteo $sync$and$array $sync$and$plane $sync$nand$array $sync$nand$plane $sync$nor$array $sync$nor$plane $sync$or$array $sync$or$plane $test$plusargs $time $timeformat $ungetc $unsigned $value$plusargs $write $writeb $writeh $writeo</Keywords>
             <Keywords name="Keywords6">INST_ TB_</Keywords>
             <Keywords name="Keywords7">.</Keywords>
-            <Keywords name="Keywords8">PAR_ STATE_</Keywords>
+            <Keywords name="Keywords8">always and assign attribute buf bufif0 bufif1 case casex casez cmos deassign default defparam disable edge &quot;else if&quot; else endattribute endcase endfunction endmodule endprimitive endspecify endtable endtask event for force forever fork function highz0 highz1 if ifnone initial inout input integer join medium module large macromodule nand negedge nmos nor not notif0 notif1 or output parameter pmos posedge primitive pull0 pull1 pulldown pullup rcmos real realtime reg release repeat rnmos rpmos rtran rtranif0 rtranif1 scalared signed small specify specparam strength strong0 strong1 supply0 supply1 table task time tran tranif0 tranif1 tri tri0 tri1 triand trior trireg unsigned vectored wait wand weak0 weak1 while wire wor xnor xor alias always_comb always_ff always_latch assert assume automatic before bind bins binsof break constraint context continue cover cross design dist do expect export extends extern final first_match foreach forkjoin iff ignore_bins illegal_bins import incdir include inside instance intersect join_any join_none liblist library matches modport new noshowcancelled null packed priority protected pulsestyle_onevent pulsestyle_ondetect pure rand randc randcase randsequence ref return showcancelled solve tagged this throughout timeprecision timeunit unique unique0 use wait_order wildcard with within class clocking config generate covergroup interface package program property sequence endclass endclocking endconfig endgenerate endgroup endinterface endpackage endprogram endproperty endsequence bit byte cell chandle const coverpoint enum genvar int local logic longint shortint shortreal static string struct super type typedef union var virtual void</Keywords>
             <Keywords name="Delimiters">00&quot; 01 02&quot; 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23</Keywords>
         </KeywordLists>
         <Styles>
@@ -39,14 +39,14 @@
             <WordsStyle name="COMMENTS" fgColor="C040C0" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
             <WordsStyle name="LINE COMMENTS" fgColor="C040C0" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="2" fontSize="14" nesting="0" />
             <WordsStyle name="NUMBERS" fgColor="404060" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="1" fontSize="14" nesting="0" />
-            <WordsStyle name="KEYWORDS1" fgColor="FF8000" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="KEYWORDS1" fgColor="000080" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
             <WordsStyle name="KEYWORDS2" fgColor="65E100" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
             <WordsStyle name="KEYWORDS3" fgColor="FF0000" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
             <WordsStyle name="KEYWORDS4" fgColor="408080" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
             <WordsStyle name="KEYWORDS5" fgColor="00B7B7" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
             <WordsStyle name="KEYWORDS6" fgColor="808080" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
             <WordsStyle name="KEYWORDS7" fgColor="69B4B4" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="2" fontSize="14" nesting="0" />
-            <WordsStyle name="KEYWORDS8" fgColor="000080" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="KEYWORDS8" fgColor="A06000" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
             <WordsStyle name="OPERATORS" fgColor="A2A2A2" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
             <WordsStyle name="FOLDER IN CODE1" fgColor="000000" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
             <WordsStyle name="FOLDER IN CODE2" fgColor="C0C0C0" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
