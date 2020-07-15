@@ -1,0 +1,126 @@
+<NotepadPlus>
+    <UserLang name="VerilogHDL" ext="v" udlVersion="2.1">
+        <Settings>
+            <Global caseIgnored="yes" allowFoldOfComments="yes" foldCompact="no" forcePureLC="0" decimalSeparator="0" />
+            <Prefix Keywords1="no" Keywords2="no" Keywords3="no" Keywords4="yes" Keywords5="no" Keywords6="yes" Keywords7="yes" Keywords8="yes" />
+        </Settings>
+        <KeywordLists>
+            <Keywords name="Comments">00// 01 02((EOL)) 03/* 04*/</Keywords>
+            <Keywords name="Numbers, prefix1"></Keywords>
+            <Keywords name="Numbers, prefix2">b B d D o O h H #</Keywords>
+            <Keywords name="Numbers, extras1">a b c d e f A B C D E F ? _</Keywords>
+            <Keywords name="Numbers, extras2"></Keywords>
+            <Keywords name="Numbers, suffix1">s ms us ns ps</Keywords>
+            <Keywords name="Numbers, suffix2"></Keywords>
+            <Keywords name="Numbers, range"></Keywords>
+            <Keywords name="Operators1">&lt; &gt; = &lt;= &gt;= == + - * / &amp; &amp;&amp; | || ~ ^ : ; ( ) [ ] { } , &apos; @</Keywords>
+            <Keywords name="Operators2">or</Keywords>
+            <Keywords name="Folders in code1, open"></Keywords>
+            <Keywords name="Folders in code1, middle"></Keywords>
+            <Keywords name="Folders in code1, close"></Keywords>
+            <Keywords name="Folders in code2, open">begin</Keywords>
+            <Keywords name="Folders in code2, middle"></Keywords>
+            <Keywords name="Folders in code2, close">end</Keywords>
+            <Keywords name="Folders in comment, open"></Keywords>
+            <Keywords name="Folders in comment, middle"></Keywords>
+            <Keywords name="Folders in comment, close"></Keywords>
+            <Keywords name="Keywords1">module endmodule function endfunction task endtask primitive endprimitive table endtable&#x000D;&#x000A;initial always assign force event&#x000D;&#x000A;posedge negedge&#x000D;&#x000A;input &#x000D;&#x000A;if &quot;else if&quot; else case casex casez endcase default for while forever repeat join &#x000D;&#x000A;</Keywords>
+            <Keywords name="Keywords2">output inout</Keywords>
+            <Keywords name="Keywords3">reg wire integer real realtime time parameter localparam defparam</Keywords>
+            <Keywords name="Keywords4">I_ O_ B_</Keywords>
+            <Keywords name="Keywords5">`celldefine `default_nettype `define `else `elsif `endcelldefine `endif `ifdef `ifndef `include `line `nounconnected_drive `resetall `timescale `unconnected_drive `undef&#x000D;&#x000A;$dumpfile $dumpvars $dumpoff $dumpon $dumpall $dumplimit$dumpports $dumpportsall $dumpportsflush $dumpportslimit $dumpportsoff $dumpportson&#x000D;&#x000A;$async$and$array $async$and$plane $async$nand$array $async$nand$plane $async$nor$array $async$nor$plane $async$or$array $async$or$plane $bitstoreal $display $displayb $displayh $displayo $dist_chi_square $dist_erlang $dist_exponential $dist_normal $dist_poisson $dist_t $dist_uniform $fclose $fdisplay $fdisplayb $fdisplayh $fdisplayo $ferror $fflush $fgetc $fgets $finish $fmonitor $fmonitorb $fmonitorh $fmonitoro $fopen $fread $fscanf $fseek $fstrobe $fstrobeb $fstrobeh $fstrobeo $ftell $fwrite $fwriteb $fwriteh $fwriteo $itor $monitor $monitorb $monitorh $monitoro $monitoroff $monitoron $printtimescale $q_add $q_exam $q_full $q_initialize $q_remove $random $readmemb $readmemh $realtime $realtobits $rewind $rtoi $sdf_annotate $sformat $signed $sscanf $stime $stop $strobe $strobeb $strobeh $strobeo $swrite $swriteb $swriteh $swriteo $sync$and$array $sync$and$plane $sync$nand$array $sync$nand$plane $sync$nor$array $sync$nor$plane $sync$or$array $sync$or$plane $test$plusargs $time $timeformat $ungetc $unsigned $value$plusargs $write $writeb $writeh $writeo</Keywords>
+            <Keywords name="Keywords6">INST_ TB_</Keywords>
+            <Keywords name="Keywords7">.</Keywords>
+            <Keywords name="Keywords8">PAR_ STATE_</Keywords>
+            <Keywords name="Delimiters">00&quot; 01 02&quot; 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23</Keywords>
+        </KeywordLists>
+        <Styles>
+            <WordsStyle name="DEFAULT" fgColor="404040" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="COMMENTS" fgColor="C040C0" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="LINE COMMENTS" fgColor="C040C0" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="2" fontSize="14" nesting="0" />
+            <WordsStyle name="NUMBERS" fgColor="404060" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="1" fontSize="14" nesting="0" />
+            <WordsStyle name="KEYWORDS1" fgColor="FF8000" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="KEYWORDS2" fgColor="65E100" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="KEYWORDS3" fgColor="FF0000" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="KEYWORDS4" fgColor="408080" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="KEYWORDS5" fgColor="00B7B7" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="KEYWORDS6" fgColor="808080" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="KEYWORDS7" fgColor="69B4B4" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="2" fontSize="14" nesting="0" />
+            <WordsStyle name="KEYWORDS8" fgColor="000080" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="OPERATORS" fgColor="A2A2A2" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="FOLDER IN CODE1" fgColor="000000" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="FOLDER IN CODE2" fgColor="C0C0C0" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="FOLDER IN COMMENT" fgColor="000000" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="DELIMITERS1" fgColor="406080" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="DELIMITERS2" fgColor="000000" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="DELIMITERS3" fgColor="000000" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="DELIMITERS4" fgColor="000000" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="DELIMITERS5" fgColor="000000" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="DELIMITERS6" fgColor="000000" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="DELIMITERS7" fgColor="000000" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="DELIMITERS8" fgColor="000000" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+        </Styles>
+    </UserLang>
+    <UserLang name="VCD" ext="vcd" udlVersion="2.1">
+        <Settings>
+            <Global caseIgnored="yes" allowFoldOfComments="no" foldCompact="no" forcePureLC="0" decimalSeparator="0" />
+            <Prefix Keywords1="no" Keywords2="yes" Keywords3="no" Keywords4="no" Keywords5="no" Keywords6="no" Keywords7="no" Keywords8="no" />
+        </Settings>
+        <KeywordLists>
+            <Keywords name="Comments">00 01 02 03$comment 04$end</Keywords>
+            <Keywords name="Numbers, prefix1"></Keywords>
+            <Keywords name="Numbers, prefix2"></Keywords>
+            <Keywords name="Numbers, extras1"></Keywords>
+            <Keywords name="Numbers, extras2"></Keywords>
+            <Keywords name="Numbers, suffix1">s ms us ns ps fs</Keywords>
+            <Keywords name="Numbers, suffix2"></Keywords>
+            <Keywords name="Numbers, range"></Keywords>
+            <Keywords name="Operators1"></Keywords>
+            <Keywords name="Operators2"></Keywords>
+            <Keywords name="Folders in code1, open"></Keywords>
+            <Keywords name="Folders in code1, middle"></Keywords>
+            <Keywords name="Folders in code1, close"></Keywords>
+            <Keywords name="Folders in code2, open"></Keywords>
+            <Keywords name="Folders in code2, middle"></Keywords>
+            <Keywords name="Folders in code2, close"></Keywords>
+            <Keywords name="Folders in comment, open"></Keywords>
+            <Keywords name="Folders in comment, middle"></Keywords>
+            <Keywords name="Folders in comment, close"></Keywords>
+            <Keywords name="Keywords1">$date $version $timescale $scope $var $upscope $dumpvars $dumpall $dumpon $dumpoff</Keywords>
+            <Keywords name="Keywords2">#</Keywords>
+            <Keywords name="Keywords3">module task funciotn begin fork&#x000D;&#x000A;event integer parameter real reg supply0 supply1 time tri triand trior trireg tri0 tri1 wand wire wor</Keywords>
+            <Keywords name="Keywords4">$enddefinitions $end</Keywords>
+            <Keywords name="Keywords5"></Keywords>
+            <Keywords name="Keywords6"></Keywords>
+            <Keywords name="Keywords7"></Keywords>
+            <Keywords name="Keywords8"></Keywords>
+            <Keywords name="Delimiters"></Keywords>
+        </KeywordLists>
+        <Styles>
+            <WordsStyle name="DEFAULT" fgColor="000000" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="COMMENTS" fgColor="FF3EFF" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="LINE COMMENTS" fgColor="000000" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="NUMBERS" fgColor="000000" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="KEYWORDS1" fgColor="FF8000" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="KEYWORDS2" fgColor="8000FF" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="KEYWORDS3" fgColor="FF0000" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="KEYWORDS4" fgColor="FFC58A" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="KEYWORDS5" fgColor="000000" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="KEYWORDS6" fgColor="000000" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="KEYWORDS7" fgColor="000000" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="KEYWORDS8" fgColor="000000" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="OPERATORS" fgColor="000000" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="FOLDER IN CODE1" fgColor="000000" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="FOLDER IN CODE2" fgColor="000000" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="FOLDER IN COMMENT" fgColor="000000" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="DELIMITERS1" fgColor="000000" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="DELIMITERS2" fgColor="000000" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="DELIMITERS3" fgColor="000000" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="DELIMITERS4" fgColor="000000" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="DELIMITERS5" fgColor="000000" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="DELIMITERS6" fgColor="000000" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="DELIMITERS7" fgColor="000000" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+            <WordsStyle name="DELIMITERS8" fgColor="000000" bgColor="FFFFFF" fontName="Microsoft YaHei Mono" fontStyle="0" fontSize="14" nesting="0" />
+        </Styles>
+    </UserLang>
+</NotepadPlus>
