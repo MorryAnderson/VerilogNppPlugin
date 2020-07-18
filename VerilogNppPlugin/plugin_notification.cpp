@@ -135,9 +135,10 @@ void Notify::AutoCompleteCompleted(int /*position*/, const char* text){
                           "\r\n"
                           "endmodule\r\n");
         editor.LineDown();
-    } else if (lstrcmpA(text, "always") == 0) {
+    } else if (lstrcmpA(text, "always_ff") == 0) {
+        editor.DelWordLeft();
         editor.InsertText(-1,
-                          " @(posedge I_CLK, negedge I_RST_N) begin\r\n"
+                          "always @(posedge I_CLK, negedge I_RST_N) begin\r\n"
                           "    if (~I_RST_N) begin\r\n"
                           "         <= 0;\r\n"
                           "    end \r\n"
@@ -148,8 +149,16 @@ void Notify::AutoCompleteCompleted(int /*position*/, const char* text){
                           );
         editor.LineDown();
         editor.LineDown();
-        editor.CharRight();
-        editor.CharRight();
+        editor.GotoPos(editor.GetCurrentPos()+8);
+    } else if (lstrcmpA(text, "always_comb") == 0) {
+        editor.DelWordLeft();
+        editor.InsertText(-1,
+                          "always @(*) begin\r\n"
+                          "    \r\n"
+                          "end"
+                          );
+        editor.LineDown();
+        editor.GotoPos(editor.GetCurrentPos()+4);
     }
 }
 
