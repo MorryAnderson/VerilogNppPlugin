@@ -94,7 +94,7 @@ bool ModuleParser::ParseModule(const char * code){
         case PARSER_TOKEN: {
             state = (state == PARSER_LAST) ? PARSER_END : PARSER_EMPTY;
             // special process for line comments
-            if (token[0] == '/') while (*code_it != '\r' && *code_it != '\n') *(token_it++) = *(code_it++);
+            if (token[0] == '/') while (!IsEOL(*code_it)) *(token_it++) = *(code_it++);
             *token_it = '\0';
             token_it = token;
             // lexer, check grammar
@@ -111,10 +111,15 @@ bool ModuleParser::ParseModule(const char * code){
         default: state = PARSER_END;
         }
     }
-    Q_ASSERT(lexer_state_ == LEXER_END);
+    // Q_ASSERT(lexer_state_ == LEXER_END);
     SetMaxLen();
-    last_error_pos_ = -1;
-    return lexer_state_ == LEXER_END;
+    if (lexer_state_ != LEXER_END) {
+        last_error_pos_ = previous_code_it - code;;
+        return false;
+    } else {
+        last_error_pos_ = -1;
+        return true;
+    }
 }
 
 int ModuleParser::GetLastError(GrammarError* error)const{
@@ -346,6 +351,10 @@ bool ModuleParser::IsOpt(char c){
 
 bool ModuleParser::IsSpace(char c){
     return c == ' ' || c == '\t';
+}
+
+bool ModuleParser::IsEOL(char c){
+    return c == '\r' || c == '\n' || c == '\0';
 }
 
 bool ModuleParser::ModuleLexer(const QString& token, bool is_opt, bool head_of_line){

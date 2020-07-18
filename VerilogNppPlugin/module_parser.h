@@ -138,7 +138,8 @@ class ModuleParser {
     };
 
     bool IsOpt(char);
-    inline bool IsSpace(char);
+    bool IsSpace(char);
+    bool IsEOL(char);
     bool ModuleLexer(const QString&, bool is_opt, bool head_of_line);
     void SetMaxLen();
     template <typename P> void InsertHeadComments(const P& p);

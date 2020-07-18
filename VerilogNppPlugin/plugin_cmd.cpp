@@ -62,7 +62,7 @@ int RetrieveModuleBlock(char** code, int *start, int *end){
     editor.SetSearchFlags(SCFIND_NONE);
     editor.TargetWholeDocument();
     editor.SetTargetStart(start_pos);
-    end_pos = editor.SearchInTarget(1, ";");
+    end_pos = editor.SearchInTarget(2, ");") + 1;
     if (-1 == end_pos) return 0;
 
     int module_len = ++end_pos - start_pos;

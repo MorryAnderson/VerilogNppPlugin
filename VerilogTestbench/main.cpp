@@ -18,16 +18,8 @@ int main(int argc, char *argv[])
 #ifdef DEBUG_PARSER
     //*
     const char code[] = {
-        "module module_name #(A=1, [7:0] WIDTH=8)(\n"
-        "    I_CLK, I_RST_N, // 中文注释 \n"
-//        "    [8] I_data_in,\n"
-//        "    [WIDTH] O_data_out,\n"
-//        "    // head comment\n"
-//        "    input port_1 ,\n"
-//        "    reg O_port_2,  // line comment\n"
-//        "    output reg signed [7:0] port_3 ,\n"
-//        "    inout  wire             port_4 \n"
-        ");"
+        "module IIC_Bit (\n"
+        "    input  I_cmd     ,  ///< 0: data;"
     };
     //*/
     /*/
