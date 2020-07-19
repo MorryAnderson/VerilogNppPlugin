@@ -548,7 +548,7 @@ bool ModuleParser::ModuleLexer(const QString& token, bool is_opt, bool head_of_l
 }
 
 void ModuleParser::SetMaxLen(){
-    max_port_dir_len_ = max_port_type_len_;
+    max_port_dir_len_ = max_port_type_len_ = 0;
     max_port_sign_len_ = max_port_name_len_ = 0;
     max_port_range_left_len_ = max_port_range_right_len_ = 0;
 

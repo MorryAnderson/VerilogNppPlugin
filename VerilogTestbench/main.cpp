@@ -19,7 +19,8 @@ int main(int argc, char *argv[])
     //*
     const char code[] = {
         "module IIC_Bit (\n"
-        "    input  I_cmd     ,  ///< 0: data;"
+        "    input  I_cmd     ,  ///< 0: data; \n"
+        ");"
     };
     //*/
     /*/
