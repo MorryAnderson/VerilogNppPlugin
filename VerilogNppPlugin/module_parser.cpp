@@ -417,6 +417,13 @@ bool ModuleParser::ModuleLexer(const QString& token, bool is_opt, bool head_of_l
                    }
                }
                break;
+            } else if (token == OPERATOR_RBK) {
+                if (port_or_param == PORT_VAR) {
+                    lexer_state_ = LEXER_END;
+                } else if (port_or_param == PARAM_VAR) {
+                    lexer_state_ = LEXER_PORT;
+                }
+                break;
             }
         }
     }
@@ -533,6 +540,10 @@ bool ModuleParser::ModuleLexer(const QString& token, bool is_opt, bool head_of_l
             module_structure_.params.append(param_);
         } else if (token == OPERATOR_RBK) {
             lexer_state_ = LEXER_PORT;
+            module_structure_.params.append(param_);
+        } else if (token.startsWith(OPERATOR_SLH)) {
+            lexer_state_ = LEXER_VAR_TYPE;
+            param_.var.tail_comment = token;
             module_structure_.params.append(param_);
         } else {
             param_.value.append(token);

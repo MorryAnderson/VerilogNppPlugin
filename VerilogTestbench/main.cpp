@@ -18,8 +18,13 @@ int main(int argc, char *argv[])
 #ifdef DEBUG_PARSER
     //*
     const char code[] = {
-        "module IIC_Bit (\n"
-        "    input  I_cmd     ,  ///< 0: data; \n"
+        "module IIC_Master #( \n"
+        "    parameter PAR_SYS_CLK_FREQ_K = 50000 ,  ///< system clock's freq in kHz\n"
+        "    parameter PAR_SPEED_K        = 100///< IIC speed in kHz    \n"
+        ")(\n"
+        "    input I_CLK   ,  \n"
+        "    input I_RST_N ,  \n"
+        "    input I_send     \n"
         ");"
     };
     //*/
