@@ -18,13 +18,18 @@ int main(int argc, char *argv[])
 #ifdef DEBUG_PARSER
     //*
     const char code[] = {
-        "module IIC_Master #( \n"
-        "    parameter PAR_SYS_CLK_FREQ_K = 50000 ,  ///< system clock's freq in kHz\n"
-        "    parameter PAR_SPEED_K        = 100///< IIC speed in kHz    \n"
+        "module UART_Tx #( \n"
+        "    parameter       PAR_PARITY   = 0 ,  \n"
+        "    parameter [2:0] PAR_DATA_BIT = 8 ,  \n"
+        "    parameter       PAR_STOP_BIT = 1    \n"
         ")(\n"
-        "    input I_CLK   ,  \n"
-        "    input I_RST_N ,  \n"
-        "    input I_send     \n"
+        "    input                     I_CLK   ,  \n"
+        "    input                     I_RST_N ,  \n"
+        "    input                     I_ENA   ,  \n"
+        "    input                     I_send  ,  \n"
+        "    input  [PAR_DATA_BIT-1:0] I_DATA  ,  \n"
+        "    output                    O_done  ,  \n"
+        "    output                    O_tx       \n"
         ");"
     };
     //*/

@@ -166,7 +166,7 @@ int ModuleParser::GetFormattedCode(const char **pointer){
             formatted_code_.append(KEYWORD_PARAM);
             formatted_code_.append(' ');
             // sign
-            if (max_port_sign_len_ > 0) formatted_code_.append(param.var.sign.leftJustified(max_port_sign_len_+1));  // +1 for tail space
+            if (max_param_sign_len_ > 0) formatted_code_.append(param.var.sign.leftJustified(max_param_sign_len_+1));  // +1 for tail space
             // range
             InsertRange(param, formatted_code_);
             // name
@@ -610,8 +610,8 @@ void ModuleParser::InsertRange(const P& p, QString& code){
     if (range_total_len > 0) {
         if (p.var.range_left.length() + p.var.range_right.length() > 0 ) {
             code.append(QString("[%1:%2] ")
-                                   .arg(p.var.range_left, max_port_range_left_len_)
-                                   .arg(p.var.range_right, max_port_range_right_len_)
+                                   .arg(p.var.range_left, max_param_range_left_len_)
+                                   .arg(p.var.range_right, max_param_range_right_len_)
             );
         } else {
             code.append(QString(range_total_len + 3 + 1, ' '));  // +3 for [:], +1 for tail space
