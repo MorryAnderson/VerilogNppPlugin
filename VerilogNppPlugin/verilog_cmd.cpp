@@ -73,7 +73,50 @@ void VerilogCmd::LoadIniFile(const TCHAR* dir){
     ::GetPrivateProfileString(_T("error message"), _T("error_port_end"     ), L"", ERROR_PORT_END     , ERROR_MESSAGE_SIZE, inifilepath);
     ::GetPrivateProfileString(_T("error message"), _T("error_param_bracket"), L"", ERROR_PARAM_BRACKET, ERROR_MESSAGE_SIZE, inifilepath);
     ::GetPrivateProfileString(_T("error message"), _T("error_param_equal"  ), L"", ERROR_PARAM_EQUAL  , ERROR_MESSAGE_SIZE, inifilepath);
+
+    // load templates
+    LoadTemplates(inifilepath);
 }
+
+void VerilogCmd::LoadTemplates(const TCHAR* inifilepath){
+    TCHAR content_w[KEYWORD_STR_SIZE*2];
+
+    ::GetPrivateProfileStringW(_T("autocomplete"), _T("templates"), L"", content_w, KEYWORD_STR_SIZE*2, inifilepath);
+    QStringList template_names = QString::fromWCharArray(content_w).split(" ");
+
+    VerilogTemplate verilog_template;
+    wchar_t section_name[128];
+    QString key_name;
+    QString template_content;
+    int length(0);
+
+    for (int i = 0; i < template_names.size(); ++i) {
+        key_name = template_names.at(i);
+        length = key_name.toWCharArray(section_name);
+        section_name[length] = '\0';
+        ::lstrcatW(section_name, L" T");
+
+        ::GetPrivateProfileStringW(section_name, _T("content"), L"", content_w, 256, inifilepath);
+        verilog_template.content = QString::fromWCharArray(content_w).replace("\\n", "\r\n");
+        verilog_template.cur_line = static_cast<int>(::GetPrivateProfileIntW(section_name, _T("cur_line"), 0, inifilepath));
+        verilog_template.cur_col = static_cast<int>(::GetPrivateProfileIntW(section_name, _T("cur_col"), 0, inifilepath));
+        templates_map_.insert(key_name, verilog_template);
+    }
+
+}
+
+bool VerilogCmd::GetTemplate(const char* key, char ** content, int *cur_line, int *cur_col){
+    if (templates_map_.contains(key)) {
+        template_ = templates_map_[key];
+        *content = template_.content.toUtf8().data();
+        *cur_line = template_.cur_line;
+        *cur_col = template_.cur_col;
+        return true;
+    } else {
+        return false;
+    }
+}
+
 bool VerilogCmd::ParseModule(const char *code){
     return module_parser_.ParseModule(code);
 }

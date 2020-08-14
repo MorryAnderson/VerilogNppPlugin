@@ -4,12 +4,21 @@
 #include <tchar.h>
 #include "module_parser.h"
 #include "align.h"
+#include <QMap>
+
+struct VerilogTemplate {
+    QString content;
+    int cur_line;
+    int cur_col;
+};
 
 class VerilogCmd {
   public:  // autocomplete
     VerilogCmd();
     VerilogCmd(const TCHAR*);
     void LoadIniFile(const TCHAR*);
+    void LoadTemplates(const TCHAR*);
+    bool GetTemplate(const char*, char**, int*, int*);
     inline bool get_enabled()const{return enabled_;}
     inline void set_enabled(bool state){enabled_ = state;}
     inline int get_autocomplete_len()const{return autocomplete_len_;}
@@ -39,6 +48,8 @@ class VerilogCmd {
     char functions_[KEYWORD_STR_SIZE];
     char directives_[KEYWORD_STR_SIZE];
     int autocomplete_len_;
+    QMap<QString, VerilogTemplate> templates_map_;
+    VerilogTemplate template_;
 
   private:  // module
     Verilog::ModuleParser module_parser_;

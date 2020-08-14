@@ -127,38 +127,15 @@ void Notify::AutoCompleteCompleted(int /*position*/, const char* text){
         editor.InsertText(-1, str);
         editor.LineDown();
         delete [] str;
-    } else if (lstrcmpA(text, "module") == 0) {
-        editor.InsertText(-1,
-                          " (\r\n"
-                          "    \r\n"
-                          ");\r\n"
-                          "\r\n"
-                          "endmodule\r\n");
-        editor.LineDown();
-    } else if (lstrcmpA(text, "always_ff") == 0) {
+    }
+    char* content(nullptr);
+    int cur_line(0), cur_col(0);
+    if (verilog.GetTemplate(text, &content, &cur_line, &cur_col)) {
         editor.DelWordLeft();
-        editor.InsertText(-1,
-                          "always @(posedge I_CLK, negedge I_RST_N) begin\r\n"
-                          "    if (~I_RST_N) begin\r\n"
-                          "         <= 0;\r\n"
-                          "    end \r\n"
-                          "    else begin\r\n"
-                          "        \r\n"
-                          "    end\r\n"
-                          "end"
-                          );
-        editor.LineDown();
-        editor.LineDown();
-        editor.GotoPos(editor.GetCurrentPos()+8);
-    } else if (lstrcmpA(text, "always_comb") == 0) {
-        editor.DelWordLeft();
-        editor.InsertText(-1,
-                          "always @(*) begin\r\n"
-                          "    \r\n"
-                          "end"
-                          );
-        editor.LineDown();
-        editor.GotoPos(editor.GetCurrentPos()+4);
+        editor.InsertText(-1, content);
+        for (int i=0; i<cur_line; ++i) editor.LineDown();
+        editor.GotoLine(editor.LineFromPosition(editor.GetCurrentPos()));
+        editor.GotoPos(editor.GetCurrentPos()+cur_col);
     }
 }
 

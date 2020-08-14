@@ -7,14 +7,18 @@ using namespace Verilog;
 #include <QString>
 #include <Windows.h>
 
-#define DEBUG_PARSER
+//#define DEBUG_PARSER
 //#define DEBUG_ALIGN
+
+#include <QMap>
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
     Verilog::ModuleParser parser;
     VerilogCmd verilog(L"C:\\Users\\Morry\\AppData\\Roaming\\Notepad++\\plugins\\config");
+    //
+
 #ifdef DEBUG_PARSER
     //*
     const char code[] = {
