@@ -53,6 +53,8 @@ void VerilogCmd::LoadIniFile(const TCHAR* dir){
         ::MessageBox(nullptr, _T("verilog.ini not found"), _T("WARNING"), MB_OK);
         return;
     }
+    bool omit_wire = static_cast<bool>(::GetPrivateProfileIntW(_T("code"), _T("omit_wire"), 0, inifilepath));
+    module_parser_.SetOmitWire(omit_wire);
 
     ::GetPrivateProfileString(_T("autocomplete"), _T("keywords"), L"", key_w, KEYWORD_STR_SIZE*2, inifilepath);
     wcstombs_s(nullptr, keywords_, KEYWORD_STR_SIZE, key_w, KEYWORD_STR_SIZE);

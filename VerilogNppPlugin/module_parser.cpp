@@ -22,6 +22,7 @@ ModuleParser::ModuleParser() : lexer_state_(LEXER_MODULE), last_error_pos_(0), l
     testbench_template_.reserve(2048);
     testbench_template_utf8_.reserve(2048);
     port_.dir = KEYWORD_INPUT;
+    omit_wire_ = false;
 }
 
 ModuleParser::ModuleParser(const char * code) : ModuleParser() {
@@ -402,9 +403,13 @@ bool ModuleParser::ModuleLexer(const QString& token, bool is_opt, bool head_of_l
         if (token == KEYWORD_REG || token == KEYWORD_WIRE || token == KEYWORD_PARAM) {
             lexer_state_ = LEXER_VAR_SIGN;
             // omit "wire"
-            if (token != KEYWORD_WIRE) var_.type = token;
+            var_.type = token;
+            if (omit_wire_ && token == KEYWORD_WIRE) {
+                var_.type = "";
+            }
             break;
         } else {
+            if (!omit_wire_) var_.type = KEYWORD_WIRE;
             // store line comments
             if (token.startsWith(OPERATOR_SLH)) {
                if (head_of_line) {

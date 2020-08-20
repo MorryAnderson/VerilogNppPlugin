@@ -56,6 +56,9 @@ class ModuleParser {
     /// \param error Type of last error.
     int GetLastError(GrammarError* error = nullptr)const;
 
+    ///
+    inline void SetOmitWire(bool omit = true){omit_wire_ = omit;}
+
     // the following functions use the result of ParseModule().
     // Make sure ParseModule() is successfullyy executed before calling those function.
 
@@ -153,6 +156,7 @@ class ModuleParser {
     Port port_;
     Parameter param_;
 
+    bool omit_wire_;
     QString formatted_code_;
     QByteArray formatted_uft8_code_;
 

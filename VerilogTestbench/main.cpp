@@ -7,7 +7,7 @@ using namespace Verilog;
 #include <QString>
 #include <Windows.h>
 
-//#define DEBUG_PARSER
+#define DEBUG_PARSER
 //#define DEBUG_ALIGN
 
 #include <QMap>
@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
     //
 
 #ifdef DEBUG_PARSER
-    //*
+    /*
     const char code[] = {
         "module UART_Tx #( \n"
         "    parameter       PAR_PARITY   = 0 ,  \n"
@@ -37,9 +37,9 @@ int main(int argc, char *argv[])
         ");"
     };
     //*/
-    /*/
+    //*/
     const char code[] = {
-        "module found();\n"
+        "module found(output reg a, input b);\n"
     };
     //*/
     /*
