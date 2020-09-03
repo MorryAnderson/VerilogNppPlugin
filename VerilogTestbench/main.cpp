@@ -20,24 +20,16 @@ int main(int argc, char *argv[])
     //
 
 #ifdef DEBUG_PARSER
-    /*
+    //*
     const char code[] = {
-        "module UART_Tx #( \n"
-        "    parameter       PAR_PARITY   = 0 ,  \n"
-        "    parameter [2:0] PAR_DATA_BIT = 8 ,  \n"
-        "    parameter       PAR_STOP_BIT = 1    \n"
-        ")(\n"
-        "    input                     I_CLK   ,  \n"
-        "    input                     I_RST_N ,  \n"
-        "    input                     I_ENA   ,  \n"
-        "    input                     I_send  ,  \n"
-        "    input  [PAR_DATA_BIT-1:0] I_DATA  ,  \n"
-        "    output                    O_done  ,  \n"
-        "    output                    O_tx       \n"
+        "module DataPackager (\r\n"
+        "    input  wire [K_DATA_WIDTH-1:0] I_real_DATA    ,  \r\n"
+        "    input  wire [K_DATA_WIDTH-1:0] I_img_DATA     ,  \r\n"
+        "    output wire [K_DATA_WIDTH*4-1:0] O_m_axis_tdata    \r\n"
         ");"
     };
     //*/
-    //*/
+    /*/
     const char code[] = {
         "module found(output reg a, input b);\n"
     };

@@ -606,17 +606,21 @@ void ModuleParser::InsertHeadComments(const P& p){
 template<typename P>
 void ModuleParser::InsertRange(const P& p, QString& code){
     int range_total_len(0);
-
+    int max_range_left_len(0), max_range_right_len(0);
     if (typeid(P) == typeid(Port)) {
         range_total_len = max_port_range_left_len_ + max_port_range_right_len_;
+        max_range_left_len = max_port_range_left_len_;
+        max_range_right_len = max_port_range_right_len_;
     } else if (typeid(P) == typeid(Parameter)) {
         range_total_len = max_param_range_left_len_ + max_param_range_right_len_;
+        max_range_left_len = max_param_range_left_len_;
+        max_range_right_len = max_param_range_right_len_;
     }
     if (range_total_len > 0) {
         if (p.var.range_left.length() + p.var.range_right.length() > 0 ) {
             code.append(QString("[%1:%2] ")
-                                   .arg(p.var.range_left, max_param_range_left_len_)
-                                   .arg(p.var.range_right, max_param_range_right_len_)
+                                   .arg(p.var.range_left, max_range_left_len)
+                                   .arg(p.var.range_right, max_range_right_len)
             );
         } else {
             code.append(QString(range_total_len + 3 + 1, ' '));  // +3 for [:], +1 for tail space
