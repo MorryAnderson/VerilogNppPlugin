@@ -112,6 +112,7 @@ class ModuleParser {
         KEYWORD_UNSGN[]  = "unsigned"   ,
         KEYWORD_WIRE[]   = "wire"       ,
         KEYWORD_REG[]    = "reg"        ,
+        KEYWORD_INTEGER[]= "integer"    ,
         KEYWORD_PARAM[]  = "parameter"  ;
 
     static const char

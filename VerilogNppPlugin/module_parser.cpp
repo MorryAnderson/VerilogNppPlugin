@@ -95,7 +95,7 @@ bool ModuleParser::ParseModule(const char * code){
         case PARSER_TOKEN: {
             state = (state == PARSER_LAST) ? PARSER_END : PARSER_EMPTY;
             // special process for line comments
-            if (token[0] == '/') while (!IsEOL(*code_it)) *(token_it++) = *(code_it++);
+            if (token[0] == '/' && *code_it == '/') while (!IsEOL(*code_it)) *(token_it++) = *(code_it++);
             *token_it = '\0';
             token_it = token;
             // lexer, check grammar
@@ -434,6 +434,13 @@ bool ModuleParser::ModuleLexer(const QString& token, bool is_opt, bool head_of_l
     }
     [[clang::fallthrough]];
     case LEXER_VAR_SIGN: {
+        // integer type
+        if (token == KEYWORD_INTEGER) {
+            lexer_state_ = LEXER_VAR_NAME;
+            var_.sign = token;
+            break;
+        }
+        //
         if (token == KEYWORD_SIGNED || token == KEYWORD_UNSGN) {
             lexer_state_ = LEXER_VAR_BRACKET_L;
             // omit "unsigned"
