@@ -17,22 +17,24 @@ VerilogCmd::VerilogCmd() : enabled_(false)/*, autocomplete_len_(2)*/{
     instantiation_align_.AddDelimeter("(", 1, 1);
     instantiation_align_.AddDelimeter(")", 1, 0);
     instantiation_align_.AddDelimeter(",", 0, 0);
-    instantiation_align_.AddDelimeter("//", 2, 0);
+    instantiation_align_.AddDelimeter("//", 2, 1);
 
     assignment_align_.AddDelimeter("=", 1, 1);
     assignment_align_.AddDelimeter(";", 0, 0);
     assignment_align_.AddDelimeter(",", 0, 0);
-    assignment_align_.AddDelimeter("//", 2, 0);
+    assignment_align_.AddDelimeter("//", 2, 1);
 
     unblocking_assign_align_.AddDelimeter("<=", 1, 1);
     unblocking_assign_align_.AddDelimeter(";", 0, 0);
     unblocking_assign_align_.AddDelimeter(",", 0, 0);
-    unblocking_assign_align_.AddDelimeter("//", 2, 0);
+    unblocking_assign_align_.AddDelimeter("//", 2, 1);
 
     variable_align_.AddDelimeter("[", 1, 0);
     variable_align_.AddDelimeter(":", 0, 0);
     variable_align_.AddDelimeter("]", 0, 1);
+    variable_align_.AddDelimeter("=", 1, 1);
     variable_align_.AddDelimeter(";", 1, 0);
+    variable_align_.AddDelimeter("///<", 2, 1);
     variable_align_.AddDelimeter("//", 2, 1);
 }
 
