@@ -33,7 +33,7 @@ class VerilogCmd {
     int GetInstantiationTemplate(const char ** buffer = nullptr);
     int GetTestbenchTemplate(const char ** buffer = nullptr);
     const TCHAR* GetErrorMessage(Verilog::ModuleParser::GrammarError error, int line, int column);
-    inline const TCHAR* GetMessageNoModule()const{return ERROR_NO_MODULE;}
+    inline const TCHAR* GetMessageNoModule()const{return STR_ERROR_NO_MODULE;}
 
   public:  // align
     int AlignPortList(const char* code, char** aligned_code, int indent = 0);
@@ -55,16 +55,17 @@ class VerilogCmd {
     Verilog::ModuleParser module_parser_;
     static constexpr TCHAR inifilename[] = L"\\verilog.ini";
     static const int ERROR_MESSAGE_SIZE = 128;
-    TCHAR error_message_[ERROR_MESSAGE_SIZE];
-    TCHAR ERROR_NO_MODULE[ERROR_MESSAGE_SIZE];
-    TCHAR POS_OF_ERROR[ERROR_MESSAGE_SIZE];
-    TCHAR ERROR_NONE[ERROR_MESSAGE_SIZE];
-    TCHAR ERROR_MODULE_NAME[ERROR_MESSAGE_SIZE];
-    TCHAR ERROR_PORT[ERROR_MESSAGE_SIZE];
-    TCHAR ERROR_VAR_NAME[ERROR_MESSAGE_SIZE];
-    TCHAR ERROR_PORT_END[ERROR_MESSAGE_SIZE];
-    TCHAR ERROR_PARAM_BRACKET[ERROR_MESSAGE_SIZE];
-    TCHAR ERROR_PARAM_EQUAL[ERROR_MESSAGE_SIZE];
+    TCHAR STR_error_message_[ERROR_MESSAGE_SIZE];
+    TCHAR STR_ERROR_NO_MODULE[ERROR_MESSAGE_SIZE];
+    TCHAR STR_POS_OF_ERROR[ERROR_MESSAGE_SIZE];
+    TCHAR STR_ERROR_NONE[ERROR_MESSAGE_SIZE];
+    TCHAR STR_ERROR_MODULE_NAME[ERROR_MESSAGE_SIZE];
+    TCHAR STR_ERROR_PORT[ERROR_MESSAGE_SIZE];
+    TCHAR STR_ERROR_VAR_NAME[ERROR_MESSAGE_SIZE];
+    TCHAR STR_ERROR_PORT_END[ERROR_MESSAGE_SIZE];
+    TCHAR STR_ERROR_PARAM_BRACKET[ERROR_MESSAGE_SIZE];
+    TCHAR STR_ERROR_PARAM_EQUAL[ERROR_MESSAGE_SIZE];
+    TCHAR STR_ERROR_PARAM_VALUE[ERROR_MESSAGE_SIZE];
 
   private:  // align
     Verilog::Align instantiation_align_;

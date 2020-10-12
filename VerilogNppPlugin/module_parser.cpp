@@ -137,6 +137,7 @@ int ModuleParser::GetLastError(GrammarError* error)const{
         case LEXER_PORT_END: *error = ERROR_PORT_END; break;
         case LEXER_PARAM_BRACKET: *error = ERROR_PARAM_BRACKET; break;
         case LEXER_PARAM_EQUAL: *error = ERROR_PARAM_EQUAL; break;
+        case LEXER_PARAM_VALUE: *error = ERROR_PARAM_VALUE; break;
         default: *error = ERROR_NONE; break;
         }
     }
@@ -364,6 +365,7 @@ bool ModuleParser::ModuleLexer(const QString& token, bool is_opt, bool head_of_l
         PARAM_VAR
     };
     static int port_or_param(PORT_VAR);
+    static int left_bracket_cnt = 0;
 
     switch (lexer_state_) {
     case LEXER_MODULE: {
@@ -531,6 +533,7 @@ bool ModuleParser::ModuleLexer(const QString& token, bool is_opt, bool head_of_l
     case LEXER_PARAM_EQUAL: {
         if (token == OPERATOR_EQL) {
             lexer_state_ = LEXER_PARAM_VALUE;
+            left_bracket_cnt = 0;
         } else {
             if (token == OPERATOR_CMM) {
                 lexer_state_ = LEXER_VAR_TYPE;
@@ -547,12 +550,24 @@ bool ModuleParser::ModuleLexer(const QString& token, bool is_opt, bool head_of_l
         break;
     }
     case LEXER_PARAM_VALUE: {
+        if (head_of_line && left_bracket_cnt != 0) {
+            left_bracket_cnt = 0;
+            return false;
+        }
         if (token == OPERATOR_CMM) {
             lexer_state_ = LEXER_VAR_TYPE;
             module_structure_.params.append(param_);
+        } else if (token == OPERATOR_LBK) {
+            ++left_bracket_cnt;
+            param_.value.append(token);
         } else if (token == OPERATOR_RBK) {
-            lexer_state_ = LEXER_PORT;
-            module_structure_.params.append(param_);
+            if (left_bracket_cnt == 0) {
+                lexer_state_ = LEXER_PORT;
+                module_structure_.params.append(param_);
+            } else {
+                --left_bracket_cnt;
+                param_.value.append(token);
+            }
         } else if (token.startsWith(OPERATOR_SLH)) {
             lexer_state_ = LEXER_VAR_TYPE;
             param_.var.tail_comment = token;

@@ -40,7 +40,8 @@ class ModuleParser {
         ERROR_VAR_NAME,
         ERROR_PORT_END,
         ERROR_PARAM_BRACKET,
-        ERROR_PARAM_EQUAL
+        ERROR_PARAM_EQUAL,
+        ERROR_PARAM_VALUE
     };
     ModuleParser();
     ModuleParser(const char*);

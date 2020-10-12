@@ -7,8 +7,8 @@ using namespace Verilog;
 #include <QString>
 #include <Windows.h>
 
-//#define DEBUG_PARSER
-#define DEBUG_ALIGN
+#define DEBUG_PARSER
+//#define DEBUG_ALIGN
 
 #include <QMap>
 
@@ -22,39 +22,21 @@ int main(int argc, char *argv[])
 #ifdef DEBUG_PARSER
     //*
     const char code[] = {
-        "module Spectrum_v1_0_M00_AXIS # \r\n"
-        "( \r\n"
-        "    // Users to add parameters here \r\n"
-        " \r\n"
-        "    // User parameters ends \r\n"
-        "    // Do not modify the parameters beyond this line \r\n"
-        " \r\n"
-        "    // Width of S_AXIS address bus. The slave accepts the read and write addresses of width C_M_AXIS_TDATA_WIDTH. \r\n"
-        "    parameter integer C_M_AXIS_TDATA_WIDTH	= 32, \r\n"
-        "    // Start count is the number of clock cycles the master will wait before initiating/issuing any transaction. \r\n"
-        "    parameter integer C_M_START_COUNT	= 32 \r\n"
-        ") \r\n"
-        "( \r\n"
-        "    // Users to add ports here \r\n"
-        " \r\n"
-        "    // User ports ends \r\n"
-        "    // Do not modify the ports beyond this line \r\n"
-        " \r\n"
-        "    // Global ports \r\n"
-        "    input wire  M_AXIS_ACLK, \r\n"
-        "    // \r\n"
-        "    input wire  M_AXIS_ARESETN, \r\n"
-        "    // Master Stream Ports. TVALID indicates that the master is driving a valid transfer, A transfer takes place when both TVALID and TREADY are asserted. \r\n"
-        "    output wire  M_AXIS_TVALID, \r\n"
-        "    // TDATA is the primary payload that is used to provide the data that is passing across the interface from the master. \r\n"
-        "    output wire [C_M_AXIS_TDATA_WIDTH-1 : 0] M_AXIS_TDATA, \r\n"
-        "    // TSTRB is the byte qualifier that indicates whether the content of the associated byte of TDATA is processed as a data byte or a position byte. \r\n"
-        "    output wire [(C_M_AXIS_TDATA_WIDTH/8)-1 : 0] M_AXIS_TSTRB, \r\n"
-        "    // TLAST indicates the boundary of a packet. \r\n"
-        "    output wire  M_AXIS_TLAST, \r\n"
-        "    // TREADY indicates that the slave can accept a transfer in the current cycle. \r\n"
-        "    input wire  M_AXIS_TREADY \r\n"
-        ");"
+        "module FileDataReader #(\r\n"
+        "    parameter PAR_FRAME_SIZE = 128,\r\n"
+        "    parameter PAR_DATA_WIDTH = 8,\r\n"
+        "    //\r\n"
+        "    parameter PAR_INDEX_WIDTH = clogb2((PAR_FRAME_SIZE))\r\n"
+        ")(\r\n"
+        "    I_CLK,\r\n"
+        "    I_RST_N,\r\n"
+        "    I_RDY,\r\n"
+        "    O_VLD,\r\n"
+        "    O_LST,\r\n"
+        "    [PAR_DATA_WIDTH] O_DAT,\r\n"
+        "    [PAR_INDEX_WIDTH] O_IDX,\r\n"
+        "    O_EOF\r\n"
+        ");\r\n"
     };
     //*/
     /*/
@@ -85,6 +67,7 @@ int main(int argc, char *argv[])
         case ModuleParser::ERROR_PORT_END: qDebug("ERROR: expected \",\" or \")\" after port declaration"); break;
         case ModuleParser::ERROR_PARAM_BRACKET: qDebug("ERROR: expected \"#(\" before param list"); break;
         case ModuleParser::ERROR_PARAM_EQUAL: qDebug("ERROR: expected \"=\" in param declaration"); break;
+         case ModuleParser::ERROR_PARAM_VALUE: qDebug("ERROR: invalid parameter value"); break;
     }
     const char* formatted_code(nullptr);
     parser.GetFormattedCode(&formatted_code);

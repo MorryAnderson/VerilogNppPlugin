@@ -2,16 +2,16 @@
 #include <Windows.h>
 
 VerilogCmd::VerilogCmd() : enabled_(false)/*, autocomplete_len_(2)*/{
-    error_message_[0] = '\0';
-    ERROR_NO_MODULE[0] = '\0';
-    POS_OF_ERROR[0] = '\0';
-    ERROR_NONE[0] = '\0';
-    ERROR_MODULE_NAME[0] = '\0';
-    ERROR_PORT[0] = '\0';
-    ERROR_VAR_NAME[0] = '\0';
-    ERROR_PORT_END[0] = '\0';
-    ERROR_PARAM_BRACKET[0] = '\0';
-    ERROR_PARAM_EQUAL[0] = '\0';
+    STR_error_message_[0] = '\0';
+    STR_ERROR_NO_MODULE[0] = '\0';
+    STR_POS_OF_ERROR[0] = '\0';
+    STR_ERROR_NONE[0] = '\0';
+    STR_ERROR_MODULE_NAME[0] = '\0';
+    STR_ERROR_PORT[0] = '\0';
+    STR_ERROR_VAR_NAME[0] = '\0';
+    STR_ERROR_PORT_END[0] = '\0';
+    STR_ERROR_PARAM_BRACKET[0] = '\0';
+    STR_ERROR_PARAM_EQUAL[0] = '\0';
 
     instantiation_align_.AddDelimeter(".", 0, 0);
     instantiation_align_.AddDelimeter("(", 1, 1);
@@ -68,15 +68,16 @@ void VerilogCmd::LoadIniFile(const TCHAR* dir){
     wcstombs_s(nullptr, directives_, KEYWORD_STR_SIZE, key_w, KEYWORD_STR_SIZE);
 
     // error messages
-    ::GetPrivateProfileString(_T("error message"), _T("error_no_module"    ), L"", ERROR_NO_MODULE    , ERROR_MESSAGE_SIZE, inifilepath);
-    ::GetPrivateProfileString(_T("error message"), _T("pos_of_error"       ), L"", POS_OF_ERROR       , ERROR_MESSAGE_SIZE, inifilepath);
-    ::GetPrivateProfileString(_T("error message"), _T("error_none"         ), L"", ERROR_NONE         , ERROR_MESSAGE_SIZE, inifilepath);
-    ::GetPrivateProfileString(_T("error message"), _T("error_module_name"  ), L"", ERROR_MODULE_NAME  , ERROR_MESSAGE_SIZE, inifilepath);
-    ::GetPrivateProfileString(_T("error message"), _T("error_port"         ), L"", ERROR_PORT         , ERROR_MESSAGE_SIZE, inifilepath);
-    ::GetPrivateProfileString(_T("error message"), _T("error_var_name"     ), L"", ERROR_VAR_NAME     , ERROR_MESSAGE_SIZE, inifilepath);
-    ::GetPrivateProfileString(_T("error message"), _T("error_port_end"     ), L"", ERROR_PORT_END     , ERROR_MESSAGE_SIZE, inifilepath);
-    ::GetPrivateProfileString(_T("error message"), _T("error_param_bracket"), L"", ERROR_PARAM_BRACKET, ERROR_MESSAGE_SIZE, inifilepath);
-    ::GetPrivateProfileString(_T("error message"), _T("error_param_equal"  ), L"", ERROR_PARAM_EQUAL  , ERROR_MESSAGE_SIZE, inifilepath);
+    ::GetPrivateProfileString(_T("error message"), _T("error_no_module"    ), L"", STR_ERROR_NO_MODULE    , ERROR_MESSAGE_SIZE, inifilepath);
+    ::GetPrivateProfileString(_T("error message"), _T("pos_of_error"       ), L"", STR_POS_OF_ERROR       , ERROR_MESSAGE_SIZE, inifilepath);
+    ::GetPrivateProfileString(_T("error message"), _T("error_none"         ), L"", STR_ERROR_NONE         , ERROR_MESSAGE_SIZE, inifilepath);
+    ::GetPrivateProfileString(_T("error message"), _T("error_module_name"  ), L"", STR_ERROR_MODULE_NAME  , ERROR_MESSAGE_SIZE, inifilepath);
+    ::GetPrivateProfileString(_T("error message"), _T("error_port"         ), L"", STR_ERROR_PORT         , ERROR_MESSAGE_SIZE, inifilepath);
+    ::GetPrivateProfileString(_T("error message"), _T("error_var_name"     ), L"", STR_ERROR_VAR_NAME     , ERROR_MESSAGE_SIZE, inifilepath);
+    ::GetPrivateProfileString(_T("error message"), _T("error_port_end"     ), L"", STR_ERROR_PORT_END     , ERROR_MESSAGE_SIZE, inifilepath);
+    ::GetPrivateProfileString(_T("error message"), _T("error_param_bracket"), L"", STR_ERROR_PARAM_BRACKET, ERROR_MESSAGE_SIZE, inifilepath);
+    ::GetPrivateProfileString(_T("error message"), _T("error_param_equal"  ), L"", STR_ERROR_PARAM_EQUAL  , ERROR_MESSAGE_SIZE, inifilepath);
+    ::GetPrivateProfileString(_T("error message"), _T("error_param_value"  ), L"", STR_ERROR_PARAM_VALUE  , ERROR_MESSAGE_SIZE, inifilepath);
 
     // load templates
     LoadTemplates(inifilepath);
@@ -146,29 +147,31 @@ const TCHAR *VerilogCmd::GetErrorMessage(Verilog::ModuleParser::GrammarError err
 
     switch (error) {
         case Verilog::ModuleParser::ERROR_NONE:
-            error_info = ERROR_NONE; break;
+            error_info = STR_ERROR_NONE; break;
         case Verilog::ModuleParser::ERROR_MODULE_NAME:
-            error_info = ERROR_MODULE_NAME; break;
+            error_info = STR_ERROR_MODULE_NAME; break;
         case Verilog::ModuleParser::ERROR_PORT:
-            error_info = ERROR_PORT; break;
+            error_info = STR_ERROR_PORT; break;
         case Verilog::ModuleParser::ERROR_VAR_NAME:
-            error_info = ERROR_VAR_NAME; break;
+            error_info = STR_ERROR_VAR_NAME; break;
         case Verilog::ModuleParser::ERROR_PORT_END:
-            error_info = ERROR_PORT_END; break;
+            error_info = STR_ERROR_PORT_END; break;
         case Verilog::ModuleParser::ERROR_PARAM_BRACKET:
-            error_info = ERROR_PARAM_BRACKET; break;
+            error_info = STR_ERROR_PARAM_BRACKET; break;
         case Verilog::ModuleParser::ERROR_PARAM_EQUAL:
-            error_info = ERROR_PARAM_EQUAL; break;
+            error_info = STR_ERROR_PARAM_EQUAL; break;
+        case Verilog::ModuleParser::ERROR_PARAM_VALUE:
+            error_info = STR_ERROR_PARAM_VALUE; break;
     }
 
     TCHAR error_pos[ERROR_MESSAGE_SIZE];
-    swprintf_s(error_pos, ERROR_MESSAGE_SIZE, POS_OF_ERROR, line, column);
+    swprintf_s(error_pos, ERROR_MESSAGE_SIZE, STR_POS_OF_ERROR, line, column);
 
-    lstrcpyW(error_message_, error_info);
-    lstrcatW(error_message_, _T(" \n"));
-    lstrcatW(error_message_, error_pos);
+    lstrcpyW(STR_error_message_, error_info);
+    lstrcatW(STR_error_message_, _T(" \n"));
+    lstrcatW(STR_error_message_, error_pos);
 
-    return error_message_;
+    return STR_error_message_;
 }
 
 int VerilogCmd::AlignPortList(const char *code, char** aligned_code, int indent){
