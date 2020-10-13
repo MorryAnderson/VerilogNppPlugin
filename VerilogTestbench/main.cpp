@@ -28,6 +28,7 @@ int main(int argc, char *argv[])
         "    //\r\n"
         "    parameter PAR_INDEX_WIDTH = clogb2((PAR_FRAME_SIZE))\r\n"
         ")(\r\n"
+        "input integer fid,\r\n"
         "    I_CLK,\r\n"
         "    I_RST_N,\r\n"
         "    I_RDY,\r\n"

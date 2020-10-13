@@ -401,17 +401,32 @@ bool ModuleParser::ModuleLexer(const QString& token, bool is_opt, bool head_of_l
         }
     }
     [[clang::fallthrough]];
+    case LEXER_PARAM_KEYWORD: {
+        if (token == KEYWORD_PARAM) {
+            lexer_state_ = LEXER_VAR_TYPE;
+            break;
+        }
+    }
+    [[clang::fallthrough]];
     case LEXER_VAR_TYPE: {
-        if (token == KEYWORD_REG || token == KEYWORD_WIRE || token == KEYWORD_PARAM) {
+        if (token == KEYWORD_REG || token == KEYWORD_WIRE) {
             lexer_state_ = LEXER_VAR_SIGN;
-            // omit "wire"
             var_.type = token;
+            // omit "wire"
             if (omit_wire_ && token == KEYWORD_WIRE) {
                 var_.type = "";
             }
             break;
+        } else if (token == KEYWORD_INTEGER || token == KEYWORD_REAL ||
+                   token == KEYWORD_TIME || token == KEYWORD_REALTIME) {
+            lexer_state_ = LEXER_VAR_NAME;
+            var_.type = token;
+            break;
         } else {
-            if (!omit_wire_) var_.type = KEYWORD_WIRE;
+            // omit "wire" ?
+            if (!omit_wire_ && port_or_param == PORT_VAR) {
+                var_.type = KEYWORD_WIRE;
+            }
             // store line comments
             if (token.startsWith(OPERATOR_SLH)) {
                if (head_of_line) {
@@ -436,13 +451,6 @@ bool ModuleParser::ModuleLexer(const QString& token, bool is_opt, bool head_of_l
     }
     [[clang::fallthrough]];
     case LEXER_VAR_SIGN: {
-        // integer type
-        if (token == KEYWORD_INTEGER) {
-            lexer_state_ = LEXER_VAR_NAME;
-            var_.sign = token;
-            break;
-        }
-        //
         if (token == KEYWORD_SIGNED || token == KEYWORD_UNSGN) {
             lexer_state_ = LEXER_VAR_BRACKET_L;
             // omit "unsigned"
@@ -526,7 +534,7 @@ bool ModuleParser::ModuleLexer(const QString& token, bool is_opt, bool head_of_l
     }
     // param
     case LEXER_PARAM_BRACKET: {
-        if (token == OPERATOR_LBK) lexer_state_ = LEXER_VAR_TYPE;
+        if (token == OPERATOR_LBK) lexer_state_ = LEXER_PARAM_KEYWORD;
         else return false;  // grammar error
         break;
     }
@@ -555,7 +563,7 @@ bool ModuleParser::ModuleLexer(const QString& token, bool is_opt, bool head_of_l
             return false;
         }
         if (token == OPERATOR_CMM) {
-            lexer_state_ = LEXER_VAR_TYPE;
+            lexer_state_ = LEXER_PARAM_KEYWORD;
             module_structure_.params.append(param_);
         } else if (token == OPERATOR_LBK) {
             ++left_bracket_cnt;
@@ -569,7 +577,7 @@ bool ModuleParser::ModuleLexer(const QString& token, bool is_opt, bool head_of_l
                 param_.value.append(token);
             }
         } else if (token.startsWith(OPERATOR_SLH)) {
-            lexer_state_ = LEXER_VAR_TYPE;
+            lexer_state_ = LEXER_PARAM_KEYWORD;
             param_.var.tail_comment = token;
             module_structure_.params.append(param_);
         } else {

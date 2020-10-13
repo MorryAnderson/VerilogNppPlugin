@@ -95,6 +95,7 @@ class ModuleParser {
         LEXER_VAR_NAME,
         LEXER_PORT_END,
         LEXER_PARAM_BRACKET,
+        LEXER_PARAM_KEYWORD,
         LEXER_PARAM_EQUAL,
         LEXER_PARAM_VALUE,
         LEXER_END
@@ -105,16 +106,19 @@ class ModuleParser {
     static constexpr char TAB[] = "    ";  // 4 spaces (1 tab)
 
     static constexpr char
-        KEYWORD_MODULE[] = "module"     ,
-        KEYWORD_INPUT[]  = "input"      ,
-        KEYWORD_OUTPUT[] = "output"     ,
-        KEYWORD_INOUT[]  = "inout"      ,
-        KEYWORD_SIGNED[] = "signed"     ,
-        KEYWORD_UNSGN[]  = "unsigned"   ,
-        KEYWORD_WIRE[]   = "wire"       ,
-        KEYWORD_REG[]    = "reg"        ,
-        KEYWORD_INTEGER[]= "integer"    ,
-        KEYWORD_PARAM[]  = "parameter"  ;
+        KEYWORD_MODULE[]   = "module"     ,
+        KEYWORD_INPUT[]    = "input"      ,
+        KEYWORD_OUTPUT[]   = "output"     ,
+        KEYWORD_INOUT[]    = "inout"      ,
+        KEYWORD_SIGNED[]   = "signed"     ,
+        KEYWORD_UNSGN[]    = "unsigned"   ,
+        KEYWORD_WIRE[]     = "wire"       ,
+        KEYWORD_REG[]      = "reg"        ,
+        KEYWORD_INTEGER[]  = "integer"    ,
+        KEYWORD_REAL[]     = "real"       ,
+        KEYWORD_TIME[]     = "time"       ,
+        KEYWORD_REALTIME[] = "realtime"   ,
+        KEYWORD_PARAM[]    = "parameter"  ;
 
     static const char
         OPERATOR_LBK = '(',
