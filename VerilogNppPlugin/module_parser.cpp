@@ -265,7 +265,7 @@ int ModuleParser::GetTestbenchTemplate(const char **pointer){
     QString clock_CLK, reset_RST_N;
 
     //! [testbench module]
-    testbench_template_.append("`timescale 1ns/1ns");
+    testbench_template_.append("`timescale 1ns/1ps");
     testbench_template_.append(ENDL);
     testbench_template_.append(ENDL);
     testbench_template_.append("module TB_");
@@ -294,8 +294,12 @@ int ModuleParser::GetTestbenchTemplate(const char **pointer){
         Port port;
         foreach (port, module_structure_.ports) {
             testbench_template_.append(ENDL);
-            if (port.var.name.endsWith("_CLK")) clock_CLK = port.var.name;
-            else if (port.var.name.endsWith("_RST_N")) reset_RST_N = port.var.name;
+            if (port.var.name.endsWith("CLK", Qt::CaseInsensitive)) {
+                clock_CLK = port.var.name;
+            }
+            else if (port.var.name.endsWith("RST_N", Qt::CaseInsensitive)) {
+                reset_RST_N = port.var.name;
+            }
             // type
             if (port.dir == KEYWORD_INPUT) {
                 testbench_template_.append(QString(KEYWORD_REG).leftJustified(max_type_len+1));
@@ -331,7 +335,7 @@ int ModuleParser::GetTestbenchTemplate(const char **pointer){
         testbench_template_.append(ENDL);
     }
     if (!reset_RST_N.isEmpty()) {
-        testbench_template_.append(QString("initial #10 %1 = 1'b1;").arg(reset_RST_N));
+        testbench_template_.append(QString("initial #100 %1 = 1'b1;").arg(reset_RST_N));
         testbench_template_.append(ENDL);
         testbench_template_.append(ENDL);
     }
