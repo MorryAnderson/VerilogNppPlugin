@@ -133,10 +133,9 @@ int Align::AlignVariableDecl(const char* code, char** pointer, int indent){
     int equal_str_index = code_str.indexOf("=");
     bool contains_range(false);
     // range "[:]" should be before '='
-    if (-1 == equal_str_index) {
-        contains_range = (range_str_index != -1);
-    } else {
-        contains_range = (range_str_index < equal_str_index);
+    if (-1 != range_str_index) {  // no [:]
+        if (-1 == equal_str_index) contains_range = true;
+        else contains_range = range_str_index < equal_str_index;
     }
     //
     if (!contains_range) {
