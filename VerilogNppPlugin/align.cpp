@@ -128,16 +128,31 @@ int Align::AlignVariableDecl(const char* code, char** pointer, int indent){
     int right_padding = delimiters_.at(2).right_padding;
     //
     QString code_str(code);
+    QStringList lines_str(code_str.split("\n"));
     const QRegExp range_regexp("\\[.*:.*\\]");
-    int range_str_index = code_str.indexOf(range_regexp);
-    int equal_str_index = code_str.indexOf("=");
+
+    int range_str_index(-1);
+    int equal_str_index(-1);
     bool contains_range(false);
-    // range "[:]" should be before '='
-    if (-1 != range_str_index) {  // no [:]
-        if (-1 == equal_str_index) contains_range = true;
-        else contains_range = range_str_index < equal_str_index;
+
+    for (int i = 0; i < lines_str.size(); ++i) {
+        range_str_index = lines_str.at(i).indexOf(range_regexp);
+        equal_str_index = lines_str.at(i).indexOf("=");
+        // range "[:]" should be before '='
+        if (-1 != range_str_index) {  // has range pattern [:]
+            if (-1 == equal_str_index) {
+                contains_range = true;
+                break;
+            }
+            else if (range_str_index < equal_str_index) {
+                contains_range = true;
+                break;
+            }
+        }
+        //
+
     }
-    //
+
     if (!contains_range) {
         delimiters_[0].left_padding = 0;
         delimiters_[2].right_padding = 0;

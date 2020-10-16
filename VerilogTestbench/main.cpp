@@ -93,8 +93,10 @@ int main(int argc, char *argv[])
     };
     //*
     const char str[] = {
-        "wire [1:0] a;\r\n"
-        "reg b = a[1:0];\r\n"
+        "reg     M_AXIS_1_tready = 1 ;\r\n"
+        "wire    M_AXIS_1_tvalid     ;\r\n"
+        "reg [7:0]  S_AXIS_0_tdata = 0;\r\n"
+        "reg     S_AXIS_0_tlast     = 0;\r\n"
     };
     //*/
     char* aligned_code(nullptr);
@@ -102,6 +104,7 @@ int main(int argc, char *argv[])
     align.AddDelimeter("[", 1, 0);
     align.AddDelimeter(":", 0, 0);
     align.AddDelimeter("]", 0, 1);
+    align.AddDelimeter("=", 1, 1);
     align.AddDelimeter(";", 1, 0);
     align.AddDelimeter("///<", 2, 1);
     align.AddDelimeter("//", 2, 1);
