@@ -301,10 +301,15 @@ int ModuleParser::GetTestbenchTemplate(const char **pointer){
                 reset_RST_N = port.var.name;
             }
             // type
-            if (port.dir == KEYWORD_INPUT) {
-                testbench_template_.append(QString(KEYWORD_REG).leftJustified(max_type_len+1));
-            } else {
-                testbench_template_.append(QString(KEYWORD_WIRE).leftJustified(max_type_len+1));
+            if (port.var.type == QString(KEYWORD_INTEGER)) {
+                testbench_template_.append(QString(KEYWORD_INTEGER).leftJustified(7+1));
+            }
+            else {
+                if (port.dir == KEYWORD_INPUT) {
+                    testbench_template_.append(QString(KEYWORD_REG).leftJustified(max_type_len+1));
+                } else {
+                    testbench_template_.append(QString(KEYWORD_WIRE).leftJustified(max_type_len+1));
+                }
             }
 
             // sign

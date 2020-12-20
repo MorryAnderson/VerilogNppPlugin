@@ -7,8 +7,8 @@ using namespace Verilog;
 #include <QString>
 #include <Windows.h>
 
-//#define DEBUG_PARSER
-#define DEBUG_ALIGN
+#define DEBUG_PARSER
+//#define DEBUG_ALIGN
 
 #include <QMap>
 
