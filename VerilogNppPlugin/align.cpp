@@ -157,7 +157,7 @@ int Align::AlignVariableDecl(const char* code, char** pointer, int indent){
         delimiters_[0].left_padding = 0;
         delimiters_[2].right_padding = 0;
     }
-    code_str.replace(QRegExp("(wire|reg)\\s+(signed|unsigned)?\\s*(\\w+)"), "\\1 \\2 [:] \\3");
+    code_str.replace(QRegExp("(wire|reg)\\s+(signed|unsigned)?\\s*(?!signed|unsigned)(\\w+)"), "\\1 \\2 [:] \\3");
     GetAlignedCode(code_str, pointer, indent);
 
     if (contains_range) {

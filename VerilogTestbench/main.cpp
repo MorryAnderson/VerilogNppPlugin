@@ -7,8 +7,8 @@ using namespace Verilog;
 #include <QString>
 #include <Windows.h>
 
-#define DEBUG_PARSER
-//#define DEBUG_ALIGN
+//#define DEBUG_PARSER
+#define DEBUG_ALIGN
 
 #include <QMap>
 
@@ -93,12 +93,12 @@ int main(int argc, char *argv[])
     };
     //*
     const char str[] = {
-        "reg     M_AXIS_1_tready = 1 ;\r\n"
-        "wire    M_AXIS_1_tvalid     ;\r\n"
-        "reg [7:0]  S_AXIS_0_tdata = 0;\r\n"
-        "reg     S_AXIS_0_tlast     = 0;\r\n"
+        "wire  [8:0] a;\n"
+        "wire [31:0] b;\n"
+        "wire c;\n"
     };
     //*/
+
     char* aligned_code(nullptr);
     Verilog::Align align;
     align.AddDelimeter("[", 1, 0);
