@@ -19,12 +19,15 @@ class VerilogCmd {
     void LoadIniFile(const TCHAR*);
     void LoadTemplates(const TCHAR*);
     bool GetTemplate(const char*, char**, int*, int*);
+    void LoadSnippets(const TCHAR*);
+    bool GetSnippet(const char*, char**);
     inline bool get_enabled()const{return enabled_;}
     inline void set_enabled(bool state){enabled_ = state;}
     inline int get_autocomplete_len()const{return autocomplete_len_;}
     inline const char* get_keywords()const{return keywords_;}
     inline const char* get_functions()const{return functions_;}
     inline const char* get_directives()const{return directives_;}
+    inline const char* get_snippets()const{return snippets_;}
 
   public:  // module
     bool ParseModule(const char*);
@@ -47,9 +50,12 @@ class VerilogCmd {
     char keywords_[KEYWORD_STR_SIZE];
     char functions_[KEYWORD_STR_SIZE];
     char directives_[KEYWORD_STR_SIZE];
+    char snippets_[KEYWORD_STR_SIZE];
     int autocomplete_len_;
     QMap<QString, VerilogTemplate> templates_map_;
     VerilogTemplate template_;
+    QMap<QString, QString> snippets_map_;
+    QString snippet_;
 
   private:  // module
     Verilog::ModuleParser module_parser_;

@@ -18,6 +18,10 @@ int main(int argc, char *argv[])
     Verilog::ModuleParser parser;
     VerilogCmd verilog(L"C:\\Users\\Morry\\AppData\\Roaming\\Notepad++\\plugins\\config");
     //
+char* content(nullptr);
+int cur_line(0), cur_col(0);
+verilog.GetSnippet("\\counter", &content);
+verilog.GetTemplate("module", &content, &cur_line, &cur_col);
 
 #ifdef DEBUG_PARSER
     //*

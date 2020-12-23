@@ -130,12 +130,18 @@ void Notify::AutoCompleteCompleted(int /*position*/, const char* text){
     }
     char* content(nullptr);
     int cur_line(0), cur_col(0);
+
     if (verilog.GetTemplate(text, &content, &cur_line, &cur_col)) {
         editor.DelWordLeft();
         editor.InsertText(-1, content);
         for (int i=0; i<cur_line; ++i) editor.LineDown();
         editor.GotoLine(editor.LineFromPosition(editor.GetCurrentPos()));
         editor.GotoPos(editor.GetCurrentPos()+cur_col);
+    }
+    else if (verilog.GetSnippet(text, &content)) {
+        editor.DelWordLeft();
+        editor.DeleteBack();
+        editor.InsertText(-1, content);
     }
 }
 
@@ -155,6 +161,8 @@ void Notify::CharAdded(int ch){
             editor.AutoCShow(1, verilog.get_functions());
         } else if (ch == '`') {
             editor.AutoCShow(1, verilog.get_directives());
+        } else if (ch == '\\') {
+            editor.AutoCShow(1, verilog.get_snippets());
         } else {
             // Find the word start
             int current_pos = editor.GetCurrentPos();

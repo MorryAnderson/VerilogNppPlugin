@@ -67,6 +67,9 @@ void VerilogCmd::LoadIniFile(const TCHAR* dir){
     ::GetPrivateProfileString(_T("autocomplete"), _T("directives"), L"", key_w, KEYWORD_STR_SIZE*2, inifilepath);
     wcstombs_s(nullptr, directives_, KEYWORD_STR_SIZE, key_w, KEYWORD_STR_SIZE);
 
+    ::GetPrivateProfileString(_T("autocomplete"), _T("snippets"), L"", key_w, KEYWORD_STR_SIZE*2, inifilepath);
+    wcstombs_s(nullptr, snippets_, KEYWORD_STR_SIZE, key_w, KEYWORD_STR_SIZE);
+
     // error messages
     ::GetPrivateProfileString(_T("error message"), _T("error_no_module"    ), L"", STR_ERROR_NO_MODULE    , ERROR_MESSAGE_SIZE, inifilepath);
     ::GetPrivateProfileString(_T("error message"), _T("pos_of_error"       ), L"", STR_POS_OF_ERROR       , ERROR_MESSAGE_SIZE, inifilepath);
@@ -81,6 +84,7 @@ void VerilogCmd::LoadIniFile(const TCHAR* dir){
 
     // load templates
     LoadTemplates(inifilepath);
+    LoadSnippets(inifilepath);
 }
 
 void VerilogCmd::LoadTemplates(const TCHAR* inifilepath){
@@ -92,7 +96,6 @@ void VerilogCmd::LoadTemplates(const TCHAR* inifilepath){
     VerilogTemplate verilog_template;
     wchar_t section_name[128];
     QString key_name;
-    QString template_content;
     int length(0);
 
     for (int i = 0; i < template_names.size(); ++i) {
@@ -101,7 +104,7 @@ void VerilogCmd::LoadTemplates(const TCHAR* inifilepath){
         section_name[length] = '\0';
         ::lstrcatW(section_name, L" T");
 
-        ::GetPrivateProfileStringW(section_name, _T("content"), L"", content_w, 256, inifilepath);
+        ::GetPrivateProfileStringW(section_name, _T("content"), L"", content_w, 1024, inifilepath);
         verilog_template.content = QString::fromWCharArray(content_w).replace("\\n", "\r\n");
         verilog_template.cur_line = static_cast<int>(::GetPrivateProfileIntW(section_name, _T("cur_line"), 0, inifilepath));
         verilog_template.cur_col = static_cast<int>(::GetPrivateProfileIntW(section_name, _T("cur_col"), 0, inifilepath));
@@ -121,6 +124,43 @@ bool VerilogCmd::GetTemplate(const char* key, char ** content, int *cur_line, in
         return false;
     }
 }
+
+void VerilogCmd::LoadSnippets(const TCHAR* inifilepath){
+    TCHAR content_w[KEYWORD_STR_SIZE*2];
+
+    ::GetPrivateProfileStringW(_T("autocomplete"), _T("snippets"), L"", content_w, KEYWORD_STR_SIZE*2, inifilepath);
+    QStringList snippet_names = QString::fromWCharArray(content_w).split(" ");
+
+    QString verilog_snippet;
+    wchar_t section_name[128];
+    QString key_name, key_name_without_head;
+    int length(0);
+
+    for (int i = 0; i < snippet_names.size(); ++i) {
+        key_name = snippet_names.at(i);
+        key_name_without_head = key_name;
+        key_name_without_head.remove(0,1);
+        length = key_name_without_head.toWCharArray(section_name);
+        section_name[length] = '\0';
+        ::lstrcatW(section_name, L" S");
+
+        ::GetPrivateProfileStringW(section_name, _T("content"), L"", content_w, 1024, inifilepath);
+        verilog_snippet = QString::fromWCharArray(content_w).replace("\\n", "\r\n");
+        snippets_map_.insert(key_name, verilog_snippet);
+    }
+
+}
+
+bool VerilogCmd::GetSnippet(const char* key, char ** content){
+    if (snippets_map_.contains(key)) {
+        snippet_ = snippets_map_[key];
+        *content = snippet_.toUtf8().data();
+        return true;
+    } else {
+        return false;
+    }
+}
+
 
 bool VerilogCmd::ParseModule(const char *code){
     return module_parser_.ParseModule(code);
