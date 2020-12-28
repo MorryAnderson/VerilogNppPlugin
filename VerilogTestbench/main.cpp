@@ -7,8 +7,8 @@ using namespace Verilog;
 #include <QString>
 #include <Windows.h>
 
-//#define DEBUG_PARSER
-#define DEBUG_ALIGN
+#define DEBUG_PARSER
+//#define DEBUG_ALIGN
 
 #include <QMap>
 
@@ -26,22 +26,12 @@ verilog.GetTemplate("module", &content, &cur_line, &cur_col);
 #ifdef DEBUG_PARSER
     //*
     const char code[] = {
-        "module FileDataReader #(\r\n"
-        "    parameter PAR_FRAME_SIZE = 128,\r\n"
-        "    parameter PAR_DATA_WIDTH = 8,\r\n"
-        "    //\r\n"
-        "    parameter PAR_INDEX_WIDTH = clogb2((PAR_FRAME_SIZE))\r\n"
-        ")(\r\n"
-        "input integer fid,\r\n"
-        "    I_CLK,\r\n"
-        "    I_RST_N,\r\n"
-        "    I_RDY,\r\n"
-        "    O_VLD,\r\n"
-        "    O_LST,\r\n"
-        "    [PAR_DATA_WIDTH] O_DAT,\r\n"
-        "    [PAR_INDEX_WIDTH] O_IDX,\r\n"
-        "    O_EOF\r\n"
-        ");\r\n"
+        "module Clip #( \n"
+        "    parameter PAR_IN_WIDTH ,  \n"
+        "    parameter PAR_LSB_WIDTH = 0\n"
+        ")(\n"
+        "    input I_CLK   \n"
+        ");\n"
     };
     //*/
     /*/

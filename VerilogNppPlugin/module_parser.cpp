@@ -553,7 +553,7 @@ bool ModuleParser::ModuleLexer(const QString& token, bool is_opt, bool head_of_l
             left_bracket_cnt = 0;
         } else {
             if (token == OPERATOR_CMM) {
-                lexer_state_ = LEXER_VAR_TYPE;
+                lexer_state_ = LEXER_PARAM_KEYWORD;
             } else if (token == OPERATOR_RBK) {
                 lexer_state_ = LEXER_PORT;
             } else if (token.startsWith(OPERATOR_SLH)) {
