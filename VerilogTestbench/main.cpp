@@ -30,7 +30,9 @@ verilog.GetTemplate("module", &content, &cur_line, &cur_col);
         "    parameter PAR_IN_WIDTH ,  \n"
         "    parameter PAR_LSB_WIDTH = 0\n"
         ")(\n"
-        "    input I_CLK   \n"
+        "    input I_CLK,   \n"
+        "    o_sum,   \n"
+        "    O_sum2  \n"
         ");\n"
     };
     //*/

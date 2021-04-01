@@ -479,11 +479,11 @@ bool ModuleParser::ModuleLexer(const QString& token, bool is_opt, bool head_of_l
     [[clang::fallthrough]];
     case LEXER_VAR_NAME: {
         if (is_opt) return false;  // grammar error
-        if (token.startsWith("I_")) {
+        if (token.startsWith("I_", Qt::CaseInsensitive)) {
             port_.dir = KEYWORD_INPUT;
-        } else if (token.startsWith("O_")) {
+        } else if (token.startsWith("O_", Qt::CaseInsensitive)) {
             port_.dir = KEYWORD_OUTPUT;
-        } else if (token.startsWith("B_")) {
+        } else if (token.startsWith("B_", Qt::CaseInsensitive)) {
             port_.dir = KEYWORD_INOUT;
         }
         var_.name = token;
