@@ -237,7 +237,7 @@ int ModuleParser::GetInstantiationTemplate(const char **pointer){
         instantiation_template_.append(ENDL);
         instantiation_template_.append(")");
     }
-    instantiation_template_.append(" INST_");
+    instantiation_template_.append(" U_");
     instantiation_template_.append(module_structure_.name);
     // ports
     instantiation_template_.append(" (");
