@@ -340,7 +340,7 @@ int ModuleParser::GetTestbenchTemplate(const char **pointer){
         testbench_template_.append(ENDL);
     }
     if (!reset_RST_N.isEmpty()) {
-        testbench_template_.append(QString("initial #100 %1 = 1'b1;").arg(reset_RST_N));
+        testbench_template_.append(QString("initial #1000 %1 = 1'b1;").arg(reset_RST_N));
         testbench_template_.append(ENDL);
         testbench_template_.append(ENDL);
     }
